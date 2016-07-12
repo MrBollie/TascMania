@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="qtOI5C" name="TascMania" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="eu.ca9.TascMania" includeBinaryInAppConfig="1"
+              jucerVersion="4.2.3">
+  <MAINGROUP id="soRM56" name="TascMania">
+    <GROUP id="{773724AE-FFA4-32B2-5F6E-D5CFDC405B50}" name="Source">
+      <FILE id="wEF14Z" name="QSlider.cpp" compile="1" resource="0" file="Source/QSlider.cpp"/>
+      <FILE id="tEVNkH" name="QSlider.h" compile="0" resource="0" file="Source/QSlider.h"/>
+      <FILE id="PX2zD5" name="EQSlider.cpp" compile="1" resource="0" file="Source/EQSlider.cpp"/>
+      <FILE id="A90HBE" name="EQSlider.h" compile="0" resource="0" file="Source/EQSlider.h"/>
+      <FILE id="w5BUqj" name="FreqSlider.cpp" compile="1" resource="0" file="Source/FreqSlider.cpp"/>
+      <FILE id="F1hr7Z" name="FreqSlider.h" compile="0" resource="0" file="Source/FreqSlider.h"/>
+      <FILE id="IEm1uJ" name="MainWindow.cpp" compile="1" resource="0" file="Source/MainWindow.cpp"/>
+      <FILE id="fHjVhp" name="MainWindow.h" compile="0" resource="0" file="Source/MainWindow.h"/>
+      <FILE id="tlsR9X" name="MasterStrip.cpp" compile="1" resource="0" file="Source/MasterStrip.cpp"/>
+      <FILE id="qDEhXd" name="MasterStrip.h" compile="0" resource="0" file="Source/MasterStrip.h"/>
+      <FILE id="Ob6LWi" name="ChannelEQ.cpp" compile="1" resource="0" file="Source/ChannelEQ.cpp"/>
+      <FILE id="TTnU31" name="ChannelEQ.h" compile="0" resource="0" file="Source/ChannelEQ.h"/>
+      <GROUP id="{54E482C9-6FA9-FA62-5667-69D5F45497F4}" name="Communication">
+        <FILE id="AV0IbH" name="CChannelStrip.cpp" compile="1" resource="0"
+              file="Source/CChannelStrip.cpp"/>
+        <FILE id="kHTOAe" name="CChannelStrip.h" compile="0" resource="0" file="Source/CChannelStrip.h"/>
+        <FILE id="mQhyvF" name="CRouting.cpp" compile="1" resource="0" file="Source/CRouting.cpp"/>
+        <FILE id="U7dyHe" name="CRouting.h" compile="0" resource="0" file="Source/CRouting.h"/>
+        <FILE id="LhL7gu" name="CTascamUSB.cpp" compile="1" resource="0" file="Source/CTascamUSB.cpp"/>
+        <FILE id="yL6dSi" name="CTascamUSB.h" compile="0" resource="0" file="Source/CTascamUSB.h"/>
+      </GROUP>
+      <FILE id="WzlmJb" name="ChannelStrip.h" compile="0" resource="0" file="Source/ChannelStrip.h"/>
+      <FILE id="jbyxCG" name="ChannelStrip.cpp" compile="1" resource="0"
+            file="Source/ChannelStrip.cpp"/>
+      <FILE id="xbK8A2" name="RouteComponent.cpp" compile="1" resource="0"
+            file="Source/RouteComponent.cpp"/>
+      <FILE id="pKJ8DB" name="RouteComponent.h" compile="0" resource="0"
+            file="Source/RouteComponent.h"/>
+      <FILE id="sD4Koq" name="RouteWindow.cpp" compile="1" resource="0" file="Source/RouteWindow.cpp"/>
+      <FILE id="vfioSw" name="RouteWindow.h" compile="0" resource="0" file="Source/RouteWindow.h"/>
+      <FILE id="HrxN7I" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="v74JUN" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="V1TGE7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+    <FILE id="dEc70i" name="EQGraph.cpp" compile="1" resource="0" file="Source/EQGraph.cpp"/>
+    <FILE id="BVv4Kq" name="EQGraph.h" compile="0" resource="0" file="Source/EQGraph.h"/>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="usb-1.0">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="TascMania" headerPath="/usr/include/libusb-1.0"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+                       targetName="TascMania" headerPath="/usr/include/libusb-1.0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+  <LIVE_SETTINGS>
+    <LINUX systemHeaderPath="" extraDLLs="" headerPath=""/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
