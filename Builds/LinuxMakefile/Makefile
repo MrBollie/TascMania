@@ -49,6 +49,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/EQGraph_3f4b2b83.o \
   $(OBJDIR)/QSlider_760a3413.o \
   $(OBJDIR)/EQSlider_66b70496.o \
   $(OBJDIR)/FreqSlider_660ff282.o \
@@ -63,7 +64,6 @@ OBJECTS := \
   $(OBJDIR)/RouteWindow_32a5057a.o \
   $(OBJDIR)/MainComponent_a6ffb4a5.o \
   $(OBJDIR)/Main_90ebc5c2.o \
-  $(OBJDIR)/EQGraph_3f4b2b83.o \
   $(OBJDIR)/juce_audio_basics_6b797ca1.o \
   $(OBJDIR)/juce_audio_processors_dea3173d.o \
   $(OBJDIR)/juce_core_75b14332.o \
@@ -92,6 +92,11 @@ clean:
 strip:
 	@echo Stripping TascMania
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/EQGraph_3f4b2b83.o: ../../Source/EQGraph.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling EQGraph.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/QSlider_760a3413.o: ../../Source/QSlider.cpp
 	-@mkdir -p $(OBJDIR)
@@ -161,11 +166,6 @@ $(OBJDIR)/MainComponent_a6ffb4a5.o: ../../Source/MainComponent.cpp
 $(OBJDIR)/Main_90ebc5c2.o: ../../Source/Main.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Main.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/EQGraph_3f4b2b83.o: ../../Source/EQGraph.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling EQGraph.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_audio_basics_6b797ca1.o: ../../JuceLibraryCode/juce_audio_basics.cpp

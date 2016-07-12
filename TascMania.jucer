@@ -5,6 +5,8 @@
               jucerVersion="4.2.3">
   <MAINGROUP id="soRM56" name="TascMania">
     <GROUP id="{773724AE-FFA4-32B2-5F6E-D5CFDC405B50}" name="Source">
+      <FILE id="BVv4Kq" name="EQGraph.h" compile="0" resource="0" file="Source/EQGraph.h"/>
+      <FILE id="dEc70i" name="EQGraph.cpp" compile="1" resource="0" file="Source/EQGraph.cpp"/>
       <FILE id="wEF14Z" name="QSlider.cpp" compile="1" resource="0" file="Source/QSlider.cpp"/>
       <FILE id="tEVNkH" name="QSlider.h" compile="0" resource="0" file="Source/QSlider.h"/>
       <FILE id="PX2zD5" name="EQSlider.cpp" compile="1" resource="0" file="Source/EQSlider.cpp"/>
@@ -40,8 +42,6 @@
       <FILE id="v74JUN" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="V1TGE7" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
-    <FILE id="dEc70i" name="EQGraph.cpp" compile="1" resource="0" file="Source/EQGraph.cpp"/>
-    <FILE id="BVv4Kq" name="EQGraph.h" compile="0" resource="0" file="Source/EQGraph.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="usb-1.0">

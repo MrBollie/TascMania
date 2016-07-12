@@ -4,6 +4,8 @@
     EQGraph.cpp
     Created: 9 Jul 2016 7:25:18pm
     Author:  rajan
+    
+    Just a stub for now, as I have no idea, how to do it. ;)
 
   ==============================================================================
 */
