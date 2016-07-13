@@ -27,7 +27,6 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     addAndMakeVisible(hiGainSlider);
     hiGainSlider.setRange(-12,12,0.1);
     hiGainSlider.setTopLeftPosition(300,2);
-    formatSlider(&hiGainSlider);
     addAndMakeVisible(hiGainLabel);
     hiGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     hiGainLabel.setText("Hi - Gain", dontSendNotification);
@@ -36,8 +35,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding hi mid gain slider
     addAndMakeVisible(hiMidGainSlider);
     hiMidGainSlider.setRange(-12,12,0.1);
-    hiMidGainSlider.setTopLeftPosition(300,52);
-    formatSlider(&hiMidGainSlider);
+    hiMidGainSlider.setTopLeftPosition(300,32);
     addAndMakeVisible(hiMidGainLabel);
     hiMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     hiMidGainLabel.setText("Hi Mid - Gain", dontSendNotification);
@@ -46,8 +44,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding low mid gain slider
     addAndMakeVisible(lowMidGainSlider);
     lowMidGainSlider.setRange(-12,12,0.1);
-    lowMidGainSlider.setTopLeftPosition(300,102);
-    formatSlider(&lowMidGainSlider);
+    lowMidGainSlider.setTopLeftPosition(300,62);
     addAndMakeVisible(lowMidGainLabel);
     lowMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     lowMidGainLabel.setText("Low Mid - Gain", dontSendNotification);
@@ -56,8 +53,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding low gain slider
     addAndMakeVisible(lowGainSlider);
     lowGainSlider.setRange(-12,12,0.1);
-    lowGainSlider.setTopLeftPosition(300,152);
-    formatSlider(&lowGainSlider);
+    lowGainSlider.setTopLeftPosition(300,92);
     addAndMakeVisible(lowGainLabel);
     lowGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     lowGainLabel.setText("Low - Gain", dontSendNotification);
@@ -73,19 +69,19 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding hi mid freq slider
     pHiMidFreqSlider = new FreqSlider(pChannel->getEQLowFreqList());
     addAndMakeVisible(pHiMidFreqSlider);
-    pHiMidFreqSlider->setTopLeftPosition(400,52);
+    pHiMidFreqSlider->setTopLeftPosition(400,32);
     pHiMidFreqSlider->addListener(this);
 
     // Adding low mid freq slider
     pLowMidFreqSlider = new FreqSlider(pChannel->getEQHiMidFreqList());
     addAndMakeVisible(pLowMidFreqSlider);
-    pLowMidFreqSlider->setTopLeftPosition(400,102);
+    pLowMidFreqSlider->setTopLeftPosition(400,62);
     pLowMidFreqSlider->addListener(this);
 
     // Adding low freq slider
     pLowFreqSlider = new FreqSlider(pChannel->getEQLowFreqList());
     addAndMakeVisible(pLowFreqSlider);
-    pLowFreqSlider->setTopLeftPosition(400,152);
+    pLowFreqSlider->setTopLeftPosition(400,92);
     pLowFreqSlider->addListener(this);
       
     // Uniform Freq Labels
@@ -100,14 +96,19 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding hi mid Q slider
     pHiMidQSlider = new QSlider(pChannel->getEQLowMidQList());
     addAndMakeVisible(pHiMidQSlider);
-    pHiMidQSlider->setTopLeftPosition(500,52);
+    pHiMidQSlider->setTopLeftPosition(500,32);
     pHiMidQSlider->addListener(this);
 
     // Adding low mid Q slider
     pLowMidQSlider = new QSlider(pChannel->getEQLowMidQList());
     addAndMakeVisible(pLowMidQSlider);
-    pLowMidQSlider->setTopLeftPosition(500,102);
+    pLowMidQSlider->setTopLeftPosition(500,62);
     pLowMidQSlider->addListener(this);
+
+    // Adding LCF button
+    addAndMakeVisible(&lcfButton);
+    lcfButton.setSize(20,10);
+    lcfButton.setTopLeftPosition(520,120);
 
     // Everything is set up, now load the channels values
     reloadValues();  

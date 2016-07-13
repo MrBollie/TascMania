@@ -41,12 +41,12 @@ private:
     Label hiMidGainLabel;
     Label hiGainLabel;
     
-    Label freqLabel[4];
+    Label freqLabel[4]; 
 
-    Slider lowGainSlider;
-    Slider lowMidGainSlider;
-    Slider hiMidGainSlider;
-    Slider hiGainSlider;
+    EQSlider lowGainSlider;
+    EQSlider lowMidGainSlider;
+    EQSlider hiMidGainSlider;
+    EQSlider hiGainSlider;
     
     FreqSlider *pLowFreqSlider;
     FreqSlider *pLowMidFreqSlider;
@@ -58,6 +58,8 @@ private:
 
     QSlider *pLowMidQSlider;
     QSlider *pHiMidQSlider;
+
+    TextButton lcfButton;
     
     void formatSlider(Slider*);
     void reloadValues();
