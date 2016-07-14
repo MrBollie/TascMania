@@ -27,6 +27,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     addAndMakeVisible(hiGainSlider);
     hiGainSlider.setRange(-12,12,0.1);
     hiGainSlider.setTopLeftPosition(300,2);
+    hiGainSlider.addListener(this);
     addAndMakeVisible(hiGainLabel);
     hiGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     hiGainLabel.setText("Hi - Gain", dontSendNotification);
@@ -36,6 +37,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     addAndMakeVisible(hiMidGainSlider);
     hiMidGainSlider.setRange(-12,12,0.1);
     hiMidGainSlider.setTopLeftPosition(300,32);
+    hiMidGainSlider.addListener(this);
     addAndMakeVisible(hiMidGainLabel);
     hiMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     hiMidGainLabel.setText("Hi Mid - Gain", dontSendNotification);
@@ -45,6 +47,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     addAndMakeVisible(lowMidGainSlider);
     lowMidGainSlider.setRange(-12,12,0.1);
     lowMidGainSlider.setTopLeftPosition(300,62);
+    lowMidGainSlider.addListener(this);
     addAndMakeVisible(lowMidGainLabel);
     lowMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     lowMidGainLabel.setText("Low Mid - Gain", dontSendNotification);
@@ -54,6 +57,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     addAndMakeVisible(lowGainSlider);
     lowGainSlider.setRange(-12,12,0.1);
     lowGainSlider.setTopLeftPosition(300,92);
+    lowGainSlider.addListener(this);
     addAndMakeVisible(lowGainLabel);
     lowGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     lowGainLabel.setText("Low - Gain", dontSendNotification);
@@ -84,14 +88,11 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     pLowFreqSlider->setTopLeftPosition(400,92);
     pLowFreqSlider->addListener(this);
       
-    // Uniform Freq Labels
-    for (int i = 0 ; i < 4 ; i++) {
-        addAndMakeVisible(&freqLabel[i]);
-        freqLabel[i].setText("Freq", dontSendNotification);
-        freqLabel[i].setColour(Label::ColourIds::textColourId, Colours::white);
-        freqLabel[i].setTopLeftPosition(440, 1+(i*50));
-        freqLabel[i].setSize(50,20);
-    }
+    addAndMakeVisible(&freqLabel);
+    freqLabel.setText("Freq", dontSendNotification);
+    freqLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    freqLabel.setTopLeftPosition(440, 1);
+    freqLabel.setSize(50,20);
     
     // Adding hi mid Q slider
     pHiMidQSlider = new QSlider(pChannel->getEQLowMidQList());
@@ -188,6 +189,7 @@ void ChannelEQ::sliderValueChanged(Slider* slider) {
             pChannel->setEQHiMidQ((float)((QSlider*)slider)->getValue());
         }
         else if (slider == &lowGainSlider) {
+            std::cout << "Low Gain Slider" << std::endl;
             pChannel->setEQLowGain(slider->getValue());
         }
         else if (slider == &lowMidGainSlider) {

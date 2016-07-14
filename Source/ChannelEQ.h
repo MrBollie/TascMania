@@ -41,7 +41,7 @@ private:
     Label hiMidGainLabel;
     Label hiGainLabel;
     
-    Label freqLabel[4]; 
+    Label freqLabel; 
 
     EQSlider lowGainSlider;
     EQSlider lowMidGainSlider;
