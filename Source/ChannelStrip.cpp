@@ -181,6 +181,9 @@ void ChannelStrip::sliderValueChanged (Slider* slider) {
     }
 }
 
+/**
+* Click handler for all the buttons
+*/
 void ChannelStrip::buttonClicked (Button* button) {
     if (button == &muteToggle) {
         pChannel->setMute(button->getToggleState());
@@ -196,12 +199,20 @@ void ChannelStrip::buttonClicked (Button* button) {
     }
 }
 
+/**
+* Sets the EQ button's state to toggle off
+*/
+void ChannelStrip::disengageEQ() {
+    eqToggle.setToggleState(false, dontSendNotification);
+}
+
 void ChannelStrip::sendEQRequest() {
     Component::BailOutChecker checker (this);
 
     if (! checker.shouldBailOut())
         channelStripListeners.callChecked (checker, &Listener::eqRequested, this);
 }
+
 
 CChannelStrip* ChannelStrip::getCChannelStrip() { return pChannel; }
 

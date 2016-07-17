@@ -82,6 +82,20 @@ void MainContentComponent::compRequested(ChannelStrip *pC) {
     //pChannelEQ->setChannelStrip(pC->getCChannelStrip());
 }
 
+
+/** 
+* Signal handler for when a channel strip requests to be controlled by
+* the ChannelEQ-component. The EQ buttons of all other channel strips
+* will be disengaged
+*/
 void MainContentComponent::eqRequested(ChannelStrip *pC) {
+    // hand over the channel strip communication object
+    // to the EQ component
     pChannelEQ->setChannelStrip(pC->getCChannelStrip());
+    
+    // Take care of consistent button states
+    for (int i = 0 ; i < 16 ; i++) {
+        if (pChannels[i] != pC)
+            pChannels[i]->disengageEQ();
+    }
 }
