@@ -202,8 +202,8 @@ void ChannelStrip::buttonClicked (Button* button) {
 /**
 * Sets the EQ button's state to toggle off
 */
-void ChannelStrip::disengageEQ() {
-    eqToggle.setToggleState(false, dontSendNotification);
+void ChannelStrip::disengageSelButton() {
+    selToggle.setToggleState(false, dontSendNotification);
 }
 
 void ChannelStrip::sendEQRequest() {

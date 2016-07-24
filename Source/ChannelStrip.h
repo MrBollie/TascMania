@@ -40,7 +40,7 @@ public:
     void resized() override;
     void sliderValueChanged (Slider*) override;
     void buttonClicked (Button*) override;
-    void disengageEQ();
+    void disengageSelButton();
     
     CChannelStrip* getCChannelStrip();
 

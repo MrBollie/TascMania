@@ -96,6 +96,6 @@ void MainContentComponent::eqRequested(ChannelStrip *pC) {
     // Take care of consistent button states
     for (int i = 0 ; i < 16 ; i++) {
         if (pChannels[i] != pC)
-            pChannels[i]->disengageEQ();
+            pChannels[i]->disengageSelButton();
     }
 }
