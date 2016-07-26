@@ -20,19 +20,22 @@ CTascamUSB::~CTascamUSB() {
 	libusb_exit(pUSBContext);
 }
 
-/*
-Wrapper function
-
-bmRequestType	the request type field for the setup packet
-bRequest	the request field for the setup packet
-wValue		the value field for the setup packet
-wIndex		the index field for the setup packet
-data		a suitably-sized data buffer for either input or 
-		output (depending on direction bits within 
-		bmRequestType)
-wLength		the length field for the setup packet. The data buffer should be at least this size.
-timeout		timeout (in millseconds) that this function should wait before giving up due to no
- 		response being received. For an unlimited timeout, use value 0. 
+/**
+* Wrapper function
+* 
+* \param bmRequestType	the request type field for the setup packet
+* \param bRequest	the request field for the setup packet
+* \param wValue		the value field for the setup packet
+* \param wIndex		the index field for the setup packet
+* \param data		a suitably-sized data buffer for either input or 
+* 			output (depending on direction bits within 
+* 			bmRequestType)
+* \param wLength 	the length field for the setup packet. The data buffer 
+*			should be at least this size.
+* \param timeout	timeout (in millseconds) that this function should wait
+*			before giving up due to no response being received. For
+* 			an unlimited timeout, use value 0. 
+* \return		0 if everything is ok. Anything else if not.
 */
 int CTascamUSB::control(uint8_t bmRequestType, uint8_t bRequest, 
 	uint8_t wValue, uint8_t wIndex, unsigned char* data, 
