@@ -1,21 +1,13 @@
-/*
-  ==============================================================================
-
-    ChannelStrip.h
-    Created: 8 Jul 2016 10:32:08am
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #ifndef CHANNELSTRIP_H_INCLUDED
 #define CHANNELSTRIP_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CChannelStrip.h"
 
-//==============================================================================
-/*
+/**
+* GUI class representing a channel strip.
+* It contains various buttons and sliders, that 
+* affect the channel.
 */
 class ChannelStrip    : public Component,
                         public Slider::Listener,
@@ -26,9 +18,18 @@ public:
     ChannelStrip(CChannelStrip*);
     ~ChannelStrip();
 
+    /**
+    * Listener class for eqRequests
+    */
     class Listener {
         public:
             virtual ~Listener() {}
+            /**
+            * Event handler for requests about 
+            * showing a ChannelStrip's paraemters
+            * on the ChannelEQ panel.
+            * \param strip that requested the claim
+            */
             virtual void eqRequested(ChannelStrip*) {}
             virtual void compRequested(ChannelStrip*) = 0;
     };

@@ -35,7 +35,9 @@ public:
 
         }
         catch(const char *s) {
-	    // \todo Some error dialog box would be better than using stderr.
+	    /**
+	     * \todo Some error dialog box would be better than using stderr.
+	    */
             std::cerr << "Faild USB init: " << s << std::endl;
 	    delete mainWindow;
 	    delete pRouting;

@@ -1,17 +1,10 @@
-/*
-  ==============================================================================
-
-    ChannelStrip.cpp
-    Created: 8 Jul 2016 10:32:08am
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ChannelStrip.h"
 
-//==============================================================================
+/**
+* Constructor
+* \param pChan CChannelStrip communication object.
+*/
 ChannelStrip::ChannelStrip(CChannelStrip *pChan)
 {
     // this is for interchannel communication
@@ -125,15 +118,27 @@ ChannelStrip::~ChannelStrip()
 {
 }
 
+/** 
+* Adds ChannelStrip::Listener for ChannelStrip events
+* \param l listener to be added
+*/
 void ChannelStrip::addListener(ChannelStrip::Listener* const l) {
     channelStripListeners.add(l);
 }
 
+
+/** 
+* Removes ChannelStrip::Listener for ChannelStrip events
+* \param l listener to be removed
+*/
 void ChannelStrip::removeListener(ChannelStrip::Listener* const l) {
     channelStripListeners.remove(l);
 }
 
 
+/**
+* Event handler to paint things.
+*/
 void ChannelStrip::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
@@ -154,6 +159,10 @@ void ChannelStrip::paint (Graphics& g)
                 Justification::centred, true);   // draw some placeholder text*/
 }
 
+
+/**
+* Event handler for when the component is being resized.
+*/
 void ChannelStrip::resized()
 {
     // This method is where you should set the bounds of any child
@@ -161,6 +170,10 @@ void ChannelStrip::resized()
 
 }
 
+
+/**
+* Event handler for changed sliders
+*/
 void ChannelStrip::sliderValueChanged (Slider* slider) {
     if (slider == &volumeSlider) {
         try {
@@ -181,8 +194,11 @@ void ChannelStrip::sliderValueChanged (Slider* slider) {
     }
 }
 
+
 /**
 * Click handler for all the buttons
+* \todo Make phase button functional
+* \todo Make solo button functional
 */
 void ChannelStrip::buttonClicked (Button* button) {
     if (button == &muteToggle) {
@@ -224,6 +240,11 @@ void ChannelStrip::disengageSelButton() {
     selToggle.setToggleState(false, dontSendNotification);
 }
 
+/**
+* Sends out an eqRequested to all compatible listeners in order
+* to tell MainComponent, that this object wants to show its 
+* EQ and compressor parameters on the ChannelEQ panel.
+*/
 void ChannelStrip::sendEQRequest() {
     Component::BailOutChecker checker (this);
 
@@ -232,5 +253,8 @@ void ChannelStrip::sendEQRequest() {
 }
 
 
+/**
+* Getter function to return the associated CChannelStrip object.
+*/
 CChannelStrip* ChannelStrip::getCChannelStrip() { return pChannel; }
 
