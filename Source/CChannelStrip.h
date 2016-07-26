@@ -16,6 +16,12 @@
 
 #include "CTascamUSB.h"
 
+/**
+* A CChannelStrip object represents a single channel of the Tascam device.
+* It stores all the parameters, updates them via USB and you can access them
+* via getter and setter functions.
+*/
+
 class CChannelStrip {
 	
 
@@ -80,11 +86,11 @@ private:
     unsigned char channelId;
     
     // Values to store
-    char vVolume;
-    char vPan;
-    bool vMuteOn;
-    bool vPhaseOn;
-    bool vCompOn;
+    char vVolume; // main volume of the channel strip (fader)
+    char vPan; // panning of the channel
+    bool vMuteOn; // mute flag
+    bool vPhaseOn; // phase or polarity flag
+    bool vCompOn; // flag wether the compressor on this chan is active
 
     bool vEQLowOn;
     bool vEQLowMidOn;

@@ -17,8 +17,12 @@
 #include "FreqSlider.h"
 #include "QSlider.h"
 
-//==============================================================================
-/*
+/**
+* This class represents the EQ panel, that will will displayed in the top area
+* of the control center main window. Channels can be assigned to it by pressing
+* their sel buttons.
+* \todo Add a LCF button
+* \todo Add compressor to it
 */
 class ChannelEQ    : public Component,
                     public Slider::Listener

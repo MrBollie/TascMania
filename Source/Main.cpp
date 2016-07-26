@@ -1,12 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic startup code for a Juce application.
-
-  ==============================================================================
-*/
 #include <unistd.h>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainWindow.h"
@@ -15,18 +6,22 @@
 #include "CRouting.h"
 
 
-//==============================================================================
+/**
+* This class is the root for our application. It sets up the main and the route
+* window and initializes the USB communication.
+**/
 class TascManiaApplication  : public JUCEApplication
 {
 public:
-    //==============================================================================
     TascManiaApplication() {}
 
     const String getApplicationName() override       { return ProjectInfo::projectName; }
     const String getApplicationVersion() override    { return ProjectInfo::versionString; }
     bool moreThanOneInstanceAllowed() override       { return true; }
 
-    //==============================================================================
+    /**
+    * Set up windows and the usb communication.
+    */
     void initialise (const String& commandLine) override
     {
         // This method is where you should put your application's initialisation code..
@@ -40,10 +35,18 @@ public:
 
         }
         catch(const char *s) {
+	    // \todo Some error dialog box would be better than using stderr.
             std::cerr << "Faild USB init: " << s << std::endl;
+	    delete mainWindow;
+	    delete pRouting;
+	    delete pUSB;
+	    quit();
         }
     }
 
+    /**
+    * This method takes care of cleanly shutting down the application.
+    */
     void shutdown() override
     {
         // Add your application's shutdown code here..
@@ -55,7 +58,6 @@ public:
         delete pUSB;
     }
 
-    //==============================================================================
     void systemRequestedQuit() override
     {
         // This is called when the app is being asked to quit: you can ignore this
@@ -69,12 +71,6 @@ public:
         // this method is invoked, and the commandLine parameter tells you what
         // the other instance's command-line arguments were.
     }
-
-    //==============================================================================
-    /*
-        This class implements the desktop window that contains an instance of
-        our MainContentComponent class.
-    */
 
 private:
     ScopedPointer<MainWindow> mainWindow;
