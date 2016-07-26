@@ -25,8 +25,9 @@ MainContentComponent::MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR)
         addAndMakeVisible(pChannels[i]);
     }
 
-    // EQ Window on top
+    // EQ Window on top. The first channel will be selected as default
     pChannelEQ = new ChannelEQ(pChannels[0]->getCChannelStrip());
+    pChannels[0]->engageSelButton();
     pChannelEQ->setTopLeftPosition(2,2);
     addAndMakeVisible(pChannelEQ);
         

@@ -116,6 +116,9 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) throw(const char*)
 CChannelStrip::~CChannelStrip() {
 }
 
+/**
+* This sets the channels fader
+*/
 int CChannelStrip::setVolume(char value) throw(const char*) {
     if (value < -97 || value > 6) 
         throw "Invalid volume range. Must be -196 to 6";
@@ -132,6 +135,11 @@ int CChannelStrip::setVolume(char value) throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
 }
 
+
+/**
+* This sets the panning.
+* Acceptable values are -128 to +127
+*/
 int CChannelStrip::setPan(char value) throw(const char*) {
     if (value < -128 || value > 127) 
         throw "Invalid volume range. Must be -128 to 128";
@@ -151,6 +159,9 @@ int CChannelStrip::setPan(char value) throw(const char*) {
 }
 
 
+/**
+* This method mutes/unmutes the channel
+*/
 int CChannelStrip::setMute(bool value) throw(const char*) {            
 	std::cout << "Chan: " << (int)channelId << std::endl;
 	std::cout << "Value: " << (int)value << std::endl;
@@ -166,25 +177,58 @@ int CChannelStrip::setMute(bool value) throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
 }
 
+
+/** 
+* This method sets the gain of the low band on the EQ
+* Note that it passes on any exception coming from 
+* the update method. Gain range goes from 0 to 12.
+*/
 int CChannelStrip::setEQLowGain(char v) throw(const char*) {
     vEQLowGain = v;
     return updateEQLow();
 }
 
+
+/** 
+* This method sets the gain of the low mid band on the EQ
+* Note that it passes on any exception coming from 
+* the update method. Gain range goes from 0 to 12.
+*/
 int CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
     vEQLowMidGain = v;
     return updateEQLowMid();
 }
 
+
+/** 
+* This method sets the gain of the hi mid band on the EQ
+* Note that it passes on any exception coming from 
+* the update method. Gain range goes from 0 to 12.
+*/
 int CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
     vEQHiMidGain = v;
     return updateEQHiMid();
 }
 
+
+/** 
+* This method sets the gain of the hi band on the EQ
+* Note that it passes on any exception coming from 
+* the update method. Gain range goes from 0 to 12.
+*/
 int CChannelStrip::setEQHiGain(char v) throw(const char*) {
     vEQHiGain = v;
     return updateEQHi();
 }
+
+
+/** 
+* This method sets the frequency of the low band on the EQ
+* Note that it passes on any exception coming from 
+* the update method.
+* Parameter v actually is an index of the corresponding
+* frequency from the map returned by getEQLowFreqList.
+*/
 
 int CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
     vEQLowFreq = v;
@@ -387,6 +431,11 @@ int CChannelStrip::updateEQHi() throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 23, 5000);
 }
 
+
+/**
+* This method converts from the gain range -12 to +12 to 
+* the corresponding value, that we transfer via USB
+*/
 char CChannelStrip::lookupEQGain(char g) throw(const char*) {
     if (g < -12 or g > 12) 
         throw "Invalid EQ gain range. Must be from -12 to 12dB";
@@ -395,6 +444,14 @@ char CChannelStrip::lookupEQGain(char g) throw(const char*) {
     return (char)g+12;
 }
 
+
+/**
+* This method takes a frequency f and tries to find the matching
+* value on the frequency map. It then returns its value used
+* for USB communication. For a list of valid frequencies check out
+* the getEQ.*FreqList() methods. It will throw an exception if 
+* it can't find a valid mapping.
+*/
 char CChannelStrip::lookupEQFreq(unsigned int f) throw(const char*) {
     for (int i = 0 ; i < freqMap.size() ; i++) {
         if (freqMap[i].freq == f) {
@@ -405,6 +462,14 @@ char CChannelStrip::lookupEQFreq(unsigned int f) throw(const char*) {
     return -1;
 }
 
+
+/**
+* This method takes a quality value and tries to find the corresponding
+* value on the Q-map. It then returns its value used for USB
+* communication. For a list of valid quality values, see the
+* getEQ.*QList()-methods. It will throw an exception if 
+* it can't find a valid mapping.
+*/
 char CChannelStrip::lookupEQQ(float q) throw(const char*) {
     for (int i = 0 ; i < qMap.size() ; i++) {
         if (qMap[i].q == q) {

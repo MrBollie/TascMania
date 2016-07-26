@@ -195,8 +195,26 @@ void ChannelStrip::buttonClicked (Button* button) {
         pChannel->setEQHiOn(button->getToggleState());
     }
     else if (button == &selToggle) {
-        sendEQRequest();
+        // In case the user tries to disengage the button
+        // manually, we re-set it to being pushed.
+        // Otherwise we'd risk some weird state
+        if (!selToggle.getToggleState()) {
+            selToggle.setToggleState(true, dontSendNotification);
+        }
+        else {
+            // Request the EQ pannel to show this channel's
+            // parameters
+            sendEQRequest();
+        }
     }
+}
+
+
+/**
+* Sets the EQ button's state to toggle on
+*/
+void ChannelStrip::engageSelButton() {
+    selToggle.setToggleState(true, dontSendNotification);
 }
 
 /**

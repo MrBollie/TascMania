@@ -41,7 +41,8 @@ public:
     void sliderValueChanged (Slider*) override;
     void buttonClicked (Button*) override;
     void disengageSelButton();
-    
+    void engageSelButton();
+
     CChannelStrip* getCChannelStrip();
 
 private:

@@ -42,6 +42,7 @@ private:
     Label hiGainLabel;
     
     Label freqLabel; 
+    Label gainLabel;
 
     EQSlider lowGainSlider;
     EQSlider lowMidGainSlider;
@@ -60,8 +61,7 @@ private:
     QSlider *pHiMidQSlider;
 
     TextButton lcfButton;
-    
-    void formatSlider(Slider*);
+
     void reloadValues();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChannelEQ)

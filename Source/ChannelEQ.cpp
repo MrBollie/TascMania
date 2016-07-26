@@ -22,94 +22,102 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding EQ Graph
     addAndMakeVisible(&eqGraph);
     eqGraph.setTopLeftPosition(2, 2);
+
+    // Gain Label
+    addAndMakeVisible(&gainLabel);
+    gainLabel.setText("Freq", dontSendNotification);
+    gainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    gainLabel.setTopLeftPosition(300, 1);
+    gainLabel.setSize(50,20);
+
+    // Freq Label
+    addAndMakeVisible(&freqLabel);
+    freqLabel.setText("Freq", dontSendNotification);
+    freqLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    freqLabel.setTopLeftPosition(400, 1);
+    freqLabel.setSize(50,20);
     
     // Adding hi gain slider
     addAndMakeVisible(hiGainSlider);
     hiGainSlider.setRange(-12,12,0.1);
-    hiGainSlider.setTopLeftPosition(300,2);
+    hiGainSlider.setTopLeftPosition(300,22);
     hiGainSlider.addListener(this);
     addAndMakeVisible(hiGainLabel);
     hiGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    hiGainLabel.setText("Hi - Gain", dontSendNotification);
+    hiGainLabel.setText("Hi", dontSendNotification);
     hiGainLabel.attachToComponent(&hiGainSlider, true);
 
     // Adding hi mid gain slider
     addAndMakeVisible(hiMidGainSlider);
     hiMidGainSlider.setRange(-12,12,0.1);
-    hiMidGainSlider.setTopLeftPosition(300,32);
+    hiMidGainSlider.setTopLeftPosition(300,52);
     hiMidGainSlider.addListener(this);
     addAndMakeVisible(hiMidGainLabel);
     hiMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    hiMidGainLabel.setText("Hi Mid - Gain", dontSendNotification);
+    hiMidGainLabel.setText("Hi Mid", dontSendNotification);
     hiMidGainLabel.attachToComponent(&hiMidGainSlider, true);
 
     // Adding low mid gain slider
     addAndMakeVisible(lowMidGainSlider);
     lowMidGainSlider.setRange(-12,12,0.1);
-    lowMidGainSlider.setTopLeftPosition(300,62);
+    lowMidGainSlider.setTopLeftPosition(300,82);
     lowMidGainSlider.addListener(this);
     addAndMakeVisible(lowMidGainLabel);
     lowMidGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    lowMidGainLabel.setText("Low Mid - Gain", dontSendNotification);
+    lowMidGainLabel.setText("Low Mid", dontSendNotification);
     lowMidGainLabel.attachToComponent(&lowMidGainSlider, true);
 
     // Adding low gain slider
     addAndMakeVisible(lowGainSlider);
     lowGainSlider.setRange(-12,12,0.1);
-    lowGainSlider.setTopLeftPosition(300,92);
+    lowGainSlider.setTopLeftPosition(300,112);
     lowGainSlider.addListener(this);
     addAndMakeVisible(lowGainLabel);
     lowGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    lowGainLabel.setText("Low - Gain", dontSendNotification);
+    lowGainLabel.setText("Low", dontSendNotification);
     lowGainLabel.attachToComponent(&lowGainSlider, true);
 
 
     // Adding hi freq slider
     pHiFreqSlider = new FreqSlider(pChannel->getEQHiFreqList());
     addAndMakeVisible(pHiFreqSlider);
-    pHiFreqSlider->setTopLeftPosition(400,2);
+    pHiFreqSlider->setTopLeftPosition(400,22);
     pHiFreqSlider->addListener(this);
 
     // Adding hi mid freq slider
     pHiMidFreqSlider = new FreqSlider(pChannel->getEQLowFreqList());
     addAndMakeVisible(pHiMidFreqSlider);
-    pHiMidFreqSlider->setTopLeftPosition(400,32);
+    pHiMidFreqSlider->setTopLeftPosition(400,52);
     pHiMidFreqSlider->addListener(this);
 
     // Adding low mid freq slider
     pLowMidFreqSlider = new FreqSlider(pChannel->getEQHiMidFreqList());
     addAndMakeVisible(pLowMidFreqSlider);
-    pLowMidFreqSlider->setTopLeftPosition(400,62);
+    pLowMidFreqSlider->setTopLeftPosition(400,82);
     pLowMidFreqSlider->addListener(this);
 
     // Adding low freq slider
     pLowFreqSlider = new FreqSlider(pChannel->getEQLowFreqList());
     addAndMakeVisible(pLowFreqSlider);
-    pLowFreqSlider->setTopLeftPosition(400,92);
+    pLowFreqSlider->setTopLeftPosition(400,112);
     pLowFreqSlider->addListener(this);
-      
-    addAndMakeVisible(&freqLabel);
-    freqLabel.setText("Freq", dontSendNotification);
-    freqLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    freqLabel.setTopLeftPosition(440, 1);
-    freqLabel.setSize(50,20);
     
     // Adding hi mid Q slider
     pHiMidQSlider = new QSlider(pChannel->getEQLowMidQList());
     addAndMakeVisible(pHiMidQSlider);
-    pHiMidQSlider->setTopLeftPosition(500,32);
+    pHiMidQSlider->setTopLeftPosition(500,52);
     pHiMidQSlider->addListener(this);
 
     // Adding low mid Q slider
     pLowMidQSlider = new QSlider(pChannel->getEQLowMidQList());
     addAndMakeVisible(pLowMidQSlider);
-    pLowMidQSlider->setTopLeftPosition(500,62);
+    pLowMidQSlider->setTopLeftPosition(500,82);
     pLowMidQSlider->addListener(this);
 
     // Adding LCF button
     addAndMakeVisible(&lcfButton);
-    lcfButton.setSize(20,10);
-    lcfButton.setTopLeftPosition(520,120);
+    lcfButton.setSize(30,30);
+    lcfButton.setTopLeftPosition(520,110);
 
     // Everything is set up, now load the channels values
     reloadValues();  
@@ -145,17 +153,11 @@ void ChannelEQ::resized()
 
 }
 
-void ChannelEQ::formatSlider(Slider *pS) {
-    pS->addListener(this);
-    pS->setSliderStyle(Slider::SliderStyle::RotaryHorizontalDrag);
-    pS->setTextBoxStyle(Slider::TextEntryBoxPosition::TextBoxRight, true, 40, 15);
-    pS->setSize(80,50);
-    pS->setColour(Slider::ColourIds::rotarySliderOutlineColourId, Colour(0xffafafaf));
-    pS->setColour(Slider::ColourIds::textBoxBackgroundColourId, Colour(0xff262626));
-    pS->setColour(Slider::ColourIds::textBoxTextColourId, Colour(0xffdadada));
-    pS->setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(0xffb9b7b4));
-}
 
+/**
+* Event handler for a changed slider value.
+* It updates the corresponding pChannel
+*/
 void ChannelEQ::sliderValueChanged(Slider* slider) {
     try {
         if (slider == pLowFreqSlider) {
@@ -207,6 +209,10 @@ void ChannelEQ::sliderValueChanged(Slider* slider) {
     }
 }
 
+/**
+* Assigns a channel strip to this EQ and reload its 
+* parameters
+*/
 void ChannelEQ::setChannelStrip(CChannelStrip *pC) {
     pChannel = pC;
     reloadValues();
