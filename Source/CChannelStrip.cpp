@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    CChannelStrip.cpp
-    Created: 8 Jul 2016 2:14:30pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "CChannelStrip.h"
 #include <iostream>
 #include <iomanip>
@@ -117,7 +107,9 @@ CChannelStrip::~CChannelStrip() {
 }
 
 /**
-* This sets the channels fader
+* This sets the channels fader.
+* \param value loudness in dB. range must be between -196 and +6
+* \throw A message in case of an error
 */
 int CChannelStrip::setVolume(char value) throw(const char*) {
     if (value < -97 || value > 6) 
@@ -160,7 +152,8 @@ int CChannelStrip::setPan(char value) throw(const char*) {
 
 
 /**
-* This method mutes/unmutes the channel
+* This method mutes/unmutes the channel.
+* \param value true for mute, false for umute
 */
 int CChannelStrip::setMute(bool value) throw(const char*) {            
 	std::cout << "Chan: " << (int)channelId << std::endl;
@@ -182,6 +175,8 @@ int CChannelStrip::setMute(bool value) throw(const char*) {
 * This method sets the gain of the low band on the EQ
 * Note that it passes on any exception coming from 
 * the update method. Gain range goes from 0 to 12.
+* \param v gain of the band (range 0 to 12)
+* \throw Exception message in case of an error
 */
 int CChannelStrip::setEQLowGain(char v) throw(const char*) {
     vEQLowGain = v;
@@ -192,7 +187,8 @@ int CChannelStrip::setEQLowGain(char v) throw(const char*) {
 /** 
 * This method sets the gain of the low mid band on the EQ
 * Note that it passes on any exception coming from 
-* the update method. Gain range goes from 0 to 12.
+* the update method. 
+* \param v Gain range goes from 0 to 12.
 */
 int CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
     vEQLowMidGain = v;
@@ -203,7 +199,8 @@ int CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
 /** 
 * This method sets the gain of the hi mid band on the EQ
 * Note that it passes on any exception coming from 
-* the update method. Gain range goes from 0 to 12.
+* the update method. 
+* \param v Gain range goes from 0 to 12.
 */
 int CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
     vEQHiMidGain = v;
@@ -214,7 +211,8 @@ int CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
 /** 
 * This method sets the gain of the hi band on the EQ
 * Note that it passes on any exception coming from 
-* the update method. Gain range goes from 0 to 12.
+* the update method. 
+* \param v Gain range goes from 0 to 12.
 */
 int CChannelStrip::setEQHiGain(char v) throw(const char*) {
     vEQHiGain = v;
@@ -226,10 +224,9 @@ int CChannelStrip::setEQHiGain(char v) throw(const char*) {
 * This method sets the frequency of the low band on the EQ
 * Note that it passes on any exception coming from 
 * the update method.
-* Parameter v actually is an index of the corresponding
+* \param v actually is an index of the corresponding
 * frequency from the map returned by getEQLowFreqList.
 */
-
 int CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
     vEQLowFreq = v;
     return updateEQLow();

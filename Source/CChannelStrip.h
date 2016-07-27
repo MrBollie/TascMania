@@ -20,8 +20,10 @@
 * A CChannelStrip object represents a single channel of the Tascam device.
 * It stores all the parameters, updates them via USB and you can access them
 * via getter and setter functions.
+* \todo int return values vor setters no longer neccessary, as exceptions will 
+* be thrown.
+* \todo some exception class based on std::exception would be much cooler!
 */
-
 class CChannelStrip {
 	
 
