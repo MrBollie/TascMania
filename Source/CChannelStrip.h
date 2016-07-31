@@ -32,30 +32,49 @@ public:
 	~CChannelStrip();
 	
 	// Setters
-	int setVolume(char) throw(const char*);
-	int setPan(char) throw(const char*);
-	int setMute(bool value) throw(const char*);
-	int setEQLowGain(char v) throw(const char*);
-	int setEQLowMidGain(char v) throw(const char*);
-	int setEQHiMidGain(char v) throw(const char*);
-	int setEQHiGain(char v) throw(const char*);
+	void setVolume(char) throw(const char*);
+	void setPan(char) throw(const char*);
+	void setMuteOn(bool) throw(const char*);
+    void setPhaseOn(bool) throw(const char*);
 
-	int setEQLowFreq(unsigned int v) throw(const char*);
-	int setEQLowMidFreq(unsigned int v) throw(const char*);
-	int setEQHiMidFreq(unsigned int v) throw(const char*);
-	int setEQHiFreq(unsigned int v) throw(const char*);
+    void setCompThreshold(char) throw(const char*);
+    void setCompAttack(unsigned char) throw(const char*);
+    void setCompRelease(unsigned int) throw(const char*);
+    void setCompGain(unsigned char) throw(const char*);
+    void setCompRatio(float) throw(const char*);
 
-	int setEQLowMidQ(float v) throw(const char*);
-	int setEQHiMidQ(float v) throw(const char*);
+	void setEQLowGain(char v) throw(const char*);
+	void setEQLowMidGain(char v) throw(const char*);
+	void setEQHiMidGain(char v) throw(const char*);
+	void setEQHiGain(char v) throw(const char*);
 
-	int setEQLowOn(bool v) throw(const char*);
-	int setEQLowMidOn(bool v) throw(const char*);
-	int setEQHiMidOn(bool v) throw(const char*);
-	int setEQHiOn(bool v) throw(const char*);
+	void setEQLowFreq(unsigned int v) throw(const char*);
+	void setEQLowMidFreq(unsigned int v) throw(const char*);
+	void setEQHiMidFreq(unsigned int v) throw(const char*);
+	void setEQHiFreq(unsigned int v) throw(const char*);
+
+	void setEQLowMidQ(float v) throw(const char*);
+	void setEQHiMidQ(float v) throw(const char*);
+
+	void setEQLowOn(bool v) throw(const char*);
+	void setEQLowMidOn(bool v) throw(const char*);
+	void setEQHiMidOn(bool v) throw(const char*);
+	void setEQHiOn(bool v) throw(const char*);
 
 	void setEQOn(bool v) throw(const char*);
 
 	// Getters
+    char getVolume();
+    char getPan();
+    bool getMuteOn();
+    bool getPhaseOn();
+
+    char getCompThreshold();
+    unsigned char getCompAttack();
+    unsigned int getCompRelease();
+    unsigned char getCompGain();
+    float getCompRatio();
+
 	char getEQLowGain();
 	char getEQLowMidGain();
 	char getEQHiMidGain();
@@ -73,6 +92,8 @@ public:
 	bool getEQLowMidOn();
 	bool getEQHiMidOn();
 	bool getEQHiOn();
+
+    static const float* getCompRatioList();
 
     std::vector<unsigned int> getEQLowFreqList();
     std::vector<unsigned int> getEQLowMidFreqList();	
@@ -94,6 +115,12 @@ private:
     bool vPhaseOn; // phase or polarity flag
     bool vCompOn; // flag wether the compressor on this chan is active
 
+    char vCompThreshold;
+    unsigned char vCompAttack;
+    unsigned int vCompRelease;
+    unsigned char vCompGain;
+    float vCompRatio;
+
     bool vEQLowOn;
     bool vEQLowMidOn;
     bool vEQHiMidOn;
@@ -112,10 +139,14 @@ private:
     float vEQLowMidQ;
     float vEQHiMidQ;
 
+	int updateComp() throw(const char*);
+
 	int updateEQLow() throw(const char*);
 	int updateEQLowMid() throw(const char*);
 	int updateEQHiMid() throw(const char*);
 	int updateEQHi() throw(const char*);
+
+    static const float validCompRatios[];
 	
 	struct sFreqMap {
 	    unsigned int freq;

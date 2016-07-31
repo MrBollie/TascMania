@@ -202,7 +202,10 @@ void ChannelStrip::sliderValueChanged (Slider* slider) {
 */
 void ChannelStrip::buttonClicked (Button* button) {
     if (button == &muteToggle) {
-        pChannel->setMute(button->getToggleState());
+        pChannel->setMuteOn(button->getToggleState());
+    }
+    else if (button == &phaseToggle) {
+        pChannel->setPhaseOn(button->getToggleState());
     }
     else if (button == &eqToggle) {
         pChannel->setEQLowOn(button->getToggleState());

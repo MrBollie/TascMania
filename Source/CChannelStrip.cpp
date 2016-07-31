@@ -3,6 +3,10 @@
 #include <iomanip>
 #include <sstream>
 
+const float CChannelStrip::validCompRatios[15] = { 
+        1, 1.1, 1.3, 1.5, 1.7, 2.0, 2.5, 3, 3.5, 4, 5, 6, 8, 16, 0 
+};
+
 CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) throw(const char*) {
     if (id < 1 || id > 16)
         throw "Invalid channel ID. Must be 1-16";
@@ -106,12 +110,13 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) throw(const char*)
 CChannelStrip::~CChannelStrip() {
 }
 
+
 /**
-* This sets the channels fader.
-* \param value loudness in dB. range must be between -196 and +6
+* Sets the channels fader.
+* \param value loudness in dB. (range: -196 to +6)
 * \throw A message in case of an error
 */
-int CChannelStrip::setVolume(char value) throw(const char*) {
+void CChannelStrip::setVolume(char value) throw(const char*) {
     if (value < -97 || value > 6) 
         throw "Invalid volume range. Must be -196 to 6";
     if (value == -97) 
@@ -121,20 +126,21 @@ int CChannelStrip::setVolume(char value) throw(const char*) {
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
-		0x81, 0x02, value,
+		0x81, 0x02, (unsigned char)value,
 		0x00, 0x00 
 	};
-	return pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
+	pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
 }
 
 
 /**
-* This sets the panning.
-* Acceptable values are -128 to +127
+* Sets the panning.
+* \param v Panning value (range: -128 to +127)
+* \throw Exception message in case of an error
 */
-int CChannelStrip::setPan(char value) throw(const char*) {
+void CChannelStrip::setPan(char value) throw(const char*) {
     if (value < -128 || value > 127) 
-        throw "Invalid volume range. Must be -128 to 128";
+        throw "Invalid pan range. Must be -128 to 128";
         
     vPan = value;
     
@@ -147,18 +153,16 @@ int CChannelStrip::setPan(char value) throw(const char*) {
 		0x82, 0x02, value,
 		0x00, 0x00 
 	};
-	return pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
+	pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
 }
 
 
 /**
 * This method mutes/unmutes the channel.
 * \param value true for mute, false for umute
+* \throw Exception message in case of an error
 */
-int CChannelStrip::setMute(bool value) throw(const char*) {            
-	std::cout << "Chan: " << (int)channelId << std::endl;
-	std::cout << "Value: " << (int)value << std::endl;
-	
+void CChannelStrip::setMuteOn(bool value) throw(const char*) {            
 	vMuteOn = value;
 
 	unsigned char data[] = { 
@@ -167,116 +171,271 @@ int CChannelStrip::setMute(bool value) throw(const char*) {
 		0x83, 0x02, (value ? 0x01 : 0x00),
 		0x00, 0x00 
 	};
-	return pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
+	pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
+}
+
+
+/**
+* This method changes the polarity of the channel.
+* \param value true reverse polarity
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setPhaseOn(bool value) throw(const char*) {            	
+	vPhaseOn = value;
+
+	unsigned char data[] = { 
+	    0x61, 0x02, 0x04, 
+		0x62, 0x02, channelId, 
+		0x85, 0x02, (value ? 0x01 : 0x00),
+		0x00, 0x00 
+	};
+	pUSB->control(0x40, 29, 0x0000, 0, data, 11, 5000);
 }
 
 
 /** 
-* This method sets the gain of the low band on the EQ
-* Note that it passes on any exception coming from 
-* the update method. Gain range goes from 0 to 12.
+* Sets the threshold of the compressor.
+* \param v Threshold (range -32 to 0)
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setCompThreshold(char v) throw(const char*) {
+    if (v < -32 || v > 0) 
+        throw "Invalid compressor threshold (use range -32 to 0)";
+
+    vCompThreshold = v;
+    updateComp();
+}
+
+
+/** 
+* Sets the attack time of the compressor.
+* \param v Attack in ms (range 2 to 200)
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setCompAttack(unsigned char v) throw(const char*) {
+    if (v < 2 || v > 200) 
+        throw "Invalid compressor attack (use range 2 to 200)";
+    vCompAttack = v;
+    updateComp();
+}
+
+
+/** 
+* Sets the release time of the compressor.
+* \param v Release in ms (range 10 to 1000)
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setCompRelease(unsigned int v) throw(const char*) {
+    if (v < 1 || v > 100) 
+        throw "Invalid compressor release (use range 10 to 1000)";
+    vCompRelease = v;
+    updateComp();
+}
+
+
+/** 
+* Sets the gain of the compressor.
+* \param v Gain (range 0 to 20)
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setCompGain(unsigned char v) throw(const char*) {
+    if (v < 0 || v > 20) 
+        throw "Invalid compressor gain (use range 0 to 20)";
+    vCompGain = v;
+    updateComp();
+}
+
+
+/** 
+* Sets the ratio of the compressor.
+* \param v ratio (range 1.0, 1.1, 1.3, 1.5, 1.7, 2.0, 2.5, 3, 3.5, 4, 5, 6, 8,
+* 16 and 0 for inf)
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setCompRatio(float v) throw(const char*) {
+    // Iterate over valid values and update comp, if a valid value has been 
+    // found    
+    for (int i = 0 ; i < 15 ; i++) {
+        if (v == CChannelStrip::validCompRatios[i]) {
+            vCompRatio = (v == 0 ? 0xff : v);
+            updateComp();
+            return;
+        }
+    }
+    
+    throw "Invalid compressor ratio (valid values: 1.0, 1.1, 1.3, 1.5, 1.7, 2.0, 2.5, 3, 3.5, 4, 5, 6, 8, 16 and 0 for inf";
+}
+
+
+/** 
+* Sets the gain of the low band on the EQ
 * \param v gain of the band (range 0 to 12)
 * \throw Exception message in case of an error
 */
-int CChannelStrip::setEQLowGain(char v) throw(const char*) {
+void CChannelStrip::setEQLowGain(char v) throw(const char*) {
+    if (v < 0 || v > 12) 
+        throw "Invalid low EQ gain (use range 0 to 12)";
+
     vEQLowGain = v;
-    return updateEQLow();
+    updateEQLow();
 }
 
 
 /** 
-* This method sets the gain of the low mid band on the EQ
-* Note that it passes on any exception coming from 
-* the update method. 
+* Sets the gain of the low mid band on the EQ
 * \param v Gain range goes from 0 to 12.
+* \todo range check
 */
-int CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
+void CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
     vEQLowMidGain = v;
-    return updateEQLowMid();
+    updateEQLowMid();
 }
 
 
 /** 
-* This method sets the gain of the hi mid band on the EQ
-* Note that it passes on any exception coming from 
-* the update method. 
+* Sets the gain of the hi mid band on the EQ
 * \param v Gain range goes from 0 to 12.
+* \todo range check
 */
-int CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
+void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
     vEQHiMidGain = v;
-    return updateEQHiMid();
+    updateEQHiMid();
 }
 
 
 /** 
-* This method sets the gain of the hi band on the EQ
-* Note that it passes on any exception coming from 
-* the update method. 
+* Sets the gain of the hi band on the EQ
 * \param v Gain range goes from 0 to 12.
+* \todo range check
 */
-int CChannelStrip::setEQHiGain(char v) throw(const char*) {
+void CChannelStrip::setEQHiGain(char v) throw(const char*) {
     vEQHiGain = v;
-    return updateEQHi();
+    updateEQHi();
 }
 
 
 /** 
-* This method sets the frequency of the low band on the EQ
-* Note that it passes on any exception coming from 
-* the update method.
+* Sets the frequency of the low band on the EQ
 * \param v actually is an index of the corresponding
 * frequency from the map returned by getEQLowFreqList.
+* \todo range check
 */
-int CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
+void CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
     vEQLowFreq = v;
-    return updateEQLow();
+    updateEQLow();
 }
 
-int CChannelStrip::setEQLowMidFreq(unsigned int v) throw(const char*) {
+
+/**
+* Sets the EQs low mid band frequency.
+* \param v Frequency of the low mid band
+* \throw Exception message in case of an error
+* \todo range check
+*/
+void CChannelStrip::setEQLowMidFreq(unsigned int v) throw(const char*) {
     vEQLowMidFreq = v;
-    return updateEQLowMid();
+    updateEQLowMid();
 }
 
-int CChannelStrip::setEQHiMidFreq(unsigned int v) throw(const char*) {
+
+/**
+* Sets the EQs hi mid band frequency.
+* \param v Frequency of the hi mid band
+* \throw Exception message in case of an error
+* \todo range check
+*/
+void CChannelStrip::setEQHiMidFreq(unsigned int v) throw(const char*) {
     vEQHiMidFreq = v;
-    return updateEQHiMid();
+    updateEQHiMid();
 }
 
-int CChannelStrip::setEQHiFreq(unsigned int v) throw(const char*) {
+
+/**
+* Sets the EQs hi band frequency.
+* \param v Frequency of the hi band
+* \throw Exception message in case of an error
+* \todo range check
+*/
+void CChannelStrip::setEQHiFreq(unsigned int v) throw(const char*) {
     vEQHiFreq = v;
-    return updateEQHi();
+    updateEQHi();
 }
 
-int CChannelStrip::setEQLowMidQ(float v) throw(const char*) {
+
+/**
+* Sets the EQs low mid band quality.
+* \param v low mid band quality. See method getEQLowMidQList for valid  
+* values.
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQLowMidQ(float v) throw(const char*) {
+    // A bit uggly, as the actually range check is done by the update method. :(
     vEQLowMidQ = v;
-    return updateEQLowMid();
+    updateEQLowMid();
 }
 
-int CChannelStrip::setEQHiMidQ(float v) throw(const char*) {
+
+/**
+* Sets the EQs hi mid band quality.
+* \param v hi mid band quality. See method getEQHiMidQList for valid  
+* values.
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQHiMidQ(float v) throw(const char*) {
     vEQHiMidQ = v;
-    return updateEQHiMid();
+    updateEQHiMid();
 }
 
-int CChannelStrip::setEQLowOn(bool v) throw(const char*) {
+
+/**
+* Switches the EQs low band on or off.
+* \param v true == on, false == off
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQLowOn(bool v) throw(const char*) {
     vEQLowOn = v;
-    return updateEQLow();
+    updateEQLow();
 }
 
-int CChannelStrip::setEQLowMidOn(bool v) throw(const char*) {
+
+/**
+* Switches the EQs low mid band on or off.
+* \param v true == on, false == off
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQLowMidOn(bool v) throw(const char*) {
     vEQLowMidOn = v;
-    return updateEQLowMid();
+    updateEQLowMid();
 }
 
-int CChannelStrip::setEQHiMidOn(bool v) throw(const char*) {
+
+/**
+* Switches the EQs hi mid band on or off.
+* \param v true == on, false == off
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQHiMidOn(bool v) throw(const char*) {
     vEQHiMidOn = v;
-    return updateEQHiMid();
+    updateEQHiMid();
 }
 
-int CChannelStrip::setEQHiOn(bool v) throw(const char*) {
+
+/**
+* Switches the EQs hi band on or off.
+* \param v true == on, false == off
+* \throw Exception message in case of an error
+*/
+void CChannelStrip::setEQHiOn(bool v) throw(const char*) {
     vEQHiOn = v;
-    return updateEQHi();
+    updateEQHi();
 }
 
+
+/**
+* Switches the EQ entirely on or off.
+* \param v true == on, false == off
+* \throw Exception message in case of an error
+*/
 void CChannelStrip::setEQOn(bool v) throw(const char*) {
     setEQLowOn(v);
     setEQLowMidOn(v);
@@ -285,18 +444,90 @@ void CChannelStrip::setEQOn(bool v) throw(const char*) {
 }
 
 
+/**
+* Returns the compressor's threshold.
+* \return t Threshold value
+*/
+char CChannelStrip::getCompThreshold() {
+    return vCompThreshold;
+}
+
+
+/**
+* Returns the compressor's attack time.
+* \return t Attack time in ms
+*/
+unsigned char CChannelStrip::getCompAttack() {
+    return vCompAttack;
+}
+
+
+/**
+* Returns the compressor's release time.
+* \return t Release time in ms
+*/
+unsigned int CChannelStrip::getCompRelease() {
+    return vCompRelease;
+}
+
+
+/**
+* Returns the compressor's gain.
+* \return t Gain
+*/
+unsigned char CChannelStrip::getCompGain() {
+    return vCompGain;
+}
+
+
+/**
+* Returns the compressor's ratio.
+* \return t Ratio
+*/
+float CChannelStrip::getCompRatio() {
+    return vCompRatio;
+}
+
+/**
+* Returns an array of valid compressor ratios.
+* \return validCompRatios An array containing valid comp ratios.
+*/
+const float* CChannelStrip::getCompRatioList() {
+    return validCompRatios;
+}
+
+
+/**
+* Returns the EQ's low band gain value.
+* \return low band gain
+*/
 char CChannelStrip::getEQLowGain() {
     return vEQLowGain;
 }
 
+
+/**
+* Returns the EQ's low mid band gain value.
+* \return low mid band gain
+*/
 char CChannelStrip::getEQLowMidGain() {
     return vEQLowMidGain;
 }
 
+
+/**
+* Returns the EQ's hi mid band gain value.
+* \return hi mid band gain
+*/
 char CChannelStrip::getEQHiMidGain() {
     return vEQHiMidGain;
 }
 
+
+/**
+* Returns the EQ's hi band gain value.
+* \return hi band gain
+*/
 char CChannelStrip::getEQHiGain() {
     return vEQHiGain;
 }
@@ -341,7 +572,37 @@ bool CChannelStrip::getEQHiOn() {
     return vEQHiOn;
 }
 
+
+/**
+* Returns the channels numeric ID.
+* \return id Channel ID
+*/
 unsigned char CChannelStrip::getId() { return channelId; }
+
+
+/**
+* Updates the compressor
+*/
+int CChannelStrip::updateComp() throw(const char*) {
+    unsigned char ratio = 
+        (vCompRatio == 0 ? 0xff : (unsigned char)(vCompRatio * 10));
+    
+	unsigned char data[] = { 
+	    0x61, 0x02, 0x04, 
+		0x62, 0x02, channelId, 
+		0x91, 0x02, (unsigned char)(vCompThreshold*-1), 
+        0x92, 0x02, ratio,
+        0x93, 0x02, vCompAttack,
+        0x94, 0x02, (unsigned char)(vCompRelease / 10),
+        0x95, 0x02, vCompGain,
+        0x96, 0x02, 0x01,
+        0x97, 0x02, (vCompOn ? 0x01 : 0x00),
+        0x00, 0x00
+	};
+
+	return pUSB->control(0x40, 29, 0x0000, 0, data, 29, 5000);
+}
+
 
 int CChannelStrip::updateEQLow() throw(const char*) {
     char f = lookupEQFreq(vEQLowFreq);
@@ -430,8 +691,10 @@ int CChannelStrip::updateEQHi() throw(const char*) {
 
 
 /**
-* This method converts from the gain range -12 to +12 to 
-* the corresponding value, that we transfer via USB
+* This method converts from the EQ gain range -12 to +12 to 
+* the corresponding value, that we transfer via USB.
+* \return g Gain value usable for USB communication
+* \throw Exception message in case of an error
 */
 char CChannelStrip::lookupEQGain(char g) throw(const char*) {
     if (g < -12 or g > 12) 
@@ -448,6 +711,8 @@ char CChannelStrip::lookupEQGain(char g) throw(const char*) {
 * for USB communication. For a list of valid frequencies check out
 * the getEQ.*FreqList() methods. It will throw an exception if 
 * it can't find a valid mapping.
+* \return freqval The corresponding value for USB communication
+* \throw Exception message in case of an error 
 */
 char CChannelStrip::lookupEQFreq(unsigned int f) throw(const char*) {
     for (int i = 0 ; i < freqMap.size() ; i++) {
@@ -461,11 +726,12 @@ char CChannelStrip::lookupEQFreq(unsigned int f) throw(const char*) {
 
 
 /**
-* This method takes a quality value and tries to find the corresponding
-* value on the Q-map. It then returns its value used for USB
-* communication. For a list of valid quality values, see the
-* getEQ.*QList()-methods. It will throw an exception if 
-* it can't find a valid mapping.
+* This method takes a EQ quality value and tries to find the corresponding
+* value on the Q-map. It then returns its value used for USB communication. 
+* For a list of valid quality values, see the getEQ.*QList()-methods. It will 
+* throw an exception if it can't find a valid mapping.
+* \return qval The corresponding value for USB communication
+* \throw Exception message in case of an error 
 */
 char CChannelStrip::lookupEQQ(float q) throw(const char*) {
     for (int i = 0 ; i < qMap.size() ; i++) {
@@ -477,8 +743,10 @@ char CChannelStrip::lookupEQQ(float q) throw(const char*) {
     return -1;
 }
 
+
 /**
-* Retrieves a list of possible low freq values
+* Retrieves a list of possible freq values for the EQ's low band.
+* \return lft A vector containing low freq values
 */
 std::vector<unsigned int> CChannelStrip::getEQLowFreqList() {
     std::vector<unsigned int> lft;
@@ -488,8 +756,10 @@ std::vector<unsigned int> CChannelStrip::getEQLowFreqList() {
     return lft;
 }
 
+
 /**
-* Retrieves a list of possible low mid freq values
+* Retrieves a list of possible freq values for the EQ's low mid band.
+* \return lft A vector containing low mid freq values
 */
 std::vector<unsigned int> CChannelStrip::getEQLowMidFreqList() {
     std::vector<unsigned int> lft;
@@ -499,8 +769,10 @@ std::vector<unsigned int> CChannelStrip::getEQLowMidFreqList() {
     return lft;
 }
 
+
 /**
-* Retrieves a list of possible hi mid freq values
+* Retrieves a list of possible freq values for the EQ's hi mid band.
+* \return lft A vector containing hi mid freq values
 */
 std::vector<unsigned int> CChannelStrip::getEQHiMidFreqList() {
     std::vector<unsigned int> lft;
@@ -510,8 +782,10 @@ std::vector<unsigned int> CChannelStrip::getEQHiMidFreqList() {
     return lft;
 }
 
+
 /**
-* Retrieves a list of possible hi freq values
+* Retrieves a list of possible freq values for the EQ's hi band.
+* \return qs A vector containing hi freq values
 */
 std::vector<unsigned int> CChannelStrip::getEQHiFreqList() {
     std::vector<unsigned int> lft;
@@ -523,7 +797,8 @@ std::vector<unsigned int> CChannelStrip::getEQHiFreqList() {
 
 
 /**
-* Retrieves a list of possible low mid q values
+* Retrieves a list of possible quality values for the EQ's low mid band.
+* \return qs A vector containing low mid q values
 */
 std::vector<float> CChannelStrip::getEQLowMidQList() {
     std::vector<float> qs;
@@ -533,8 +808,10 @@ std::vector<float> CChannelStrip::getEQLowMidQList() {
     return qs;
 }
 
+
 /**
-* Retrieves a list of possible hi mid q values
+* Retrieves a list of possible quality values for the EQ's hi mid band.
+* \return qs A vector containing hi mid q values
 */
 std::vector<float> CChannelStrip::getEQHiMidQList() {
     std::vector<float> qs;
