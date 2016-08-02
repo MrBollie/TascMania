@@ -6,11 +6,13 @@
 class CTascamUSB {
 	private:
 		libusb_context *pUSBContext;
-		libusb_device_handle *pUSBDevHandle;
+		libusb_device_handle *pUSBDevHandle = NULL;
 		libusb_device **pUSBDevList;
 	public:
-		CTascamUSB() throw(const char*);
+		CTascamUSB();
 		~CTascamUSB();
+
+        void init() throw(const char*);
 		int control(uint8_t bmRequestType, uint8_t bRequest, 
 			uint8_t wValue, uint8_t wIndex, 
 			unsigned char* data, uint16_t wLength, 

@@ -116,8 +116,26 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
 
     // Adding LCF button
     addAndMakeVisible(&lcfButton);
-    lcfButton.setSize(30,30);
-    lcfButton.setTopLeftPosition(520,110);
+    lcfButton.setSize(40,30);
+    lcfButton.setTopLeftPosition(530,120);
+    lcfButton.setButtonText("LCF");
+    lcfButton.setColour(TextButton::ColourIds::buttonColourId, Colour(0xff797979));
+    lcfButton.setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xffd2e00a));
+    lcfButton.setClickingTogglesState(true);
+
+    /******************
+    * Compressor
+    */
+    
+    // Adding threshold slider
+    addAndMakeVisible(compThresholdSlider);
+    compThresholdSlider.setRange(-32,0);
+    compThresholdSlider.setTopLeftPosition(700,22);
+    compThresholdSlider.addListener(this);
+    compThresholdLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    compThresholdLabel.setText("Hi", dontSendNotification);
+    compThresholdLabel.attachToComponent(&compThresholdSlider, true);
+
 
     // Everything is set up, now load the channels values
     reloadValues();  

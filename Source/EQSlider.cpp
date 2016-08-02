@@ -20,7 +20,7 @@ EQSlider::EQSlider() : Slider(RotaryVerticalDrag, TextBoxRight)
     setColour(Slider::ColourIds::textBoxBackgroundColourId, Colour(0xff262626));
     setColour(Slider::ColourIds::textBoxTextColourId, Colour(0xffdadada));
     setColour(Slider::ColourIds::rotarySliderFillColourId, Colour(0xffb9b7b4));
-
+    setColour(Label::ColourIds::textColourId, Colours::white);
 }
 
 EQSlider::~EQSlider()

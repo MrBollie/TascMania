@@ -66,6 +66,17 @@ private:
 
     TextButton lcfButton;
 
+    // Compressor
+    Label compThresholdLabel;
+    Label compAttackLabel;
+    Label compReleaseLabel;
+    Label compGainLabel;
+
+    EQSlider compThresholdSlider;
+    EQSlider compAttackSlider;
+    EQSlider compReleaseSlider;
+    EQSlider compGainSlider;
+
     void reloadValues();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChannelEQ)

@@ -10,9 +10,6 @@ const float CChannelStrip::validCompRatios[15] = {
 CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) throw(const char*) {
     if (id < 1 || id > 16)
         throw "Invalid channel ID. Must be 1-16";
-
-    if (p == NULL)
-        throw "Internal USB failure.";
         
     channelId = id;
     pUSB = p;

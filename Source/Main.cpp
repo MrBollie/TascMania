@@ -24,26 +24,18 @@ public:
     */
     void initialise (const String& commandLine) override
     {
-        // This method is where you should put your application's initialisation code..
-
+        pUSB = new CTascamUSB();
         try {
-            pUSB = new CTascamUSB();
-            
-            pRouting = new CRouting(pUSB);
-            routeWindow = new RouteWindow (getApplicationName(), pRouting);
-            mainWindow = new MainWindow(getApplicationName(), pUSB, routeWindow);
-
+            pUSB->init();
         }
         catch(const char *s) {
-	    /**
-	     * \todo Some error dialog box would be better than using stderr.
-	    */
-            std::cerr << "Faild USB init: " << s << std::endl;
-	    delete mainWindow;
-	    delete pRouting;
-	    delete pUSB;
-	    quit();
+            std::cerr << "Error: " << s << std::endl;
+            AlertWindow::showMessageBox(AlertWindow::AlertIconType::WarningIcon,
+                "Error", s); 
         }
+        pRouting = new CRouting(pUSB);
+        routeWindow = new RouteWindow (getApplicationName(), pRouting);
+        mainWindow = new MainWindow(getApplicationName(), pUSB, routeWindow);
     }
 
     /**

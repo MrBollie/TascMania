@@ -1,7 +1,15 @@
 #include "CTascamUSB.h"
 #include <iostream>
 
-CTascamUSB::CTascamUSB() throw(const char*){
+CTascamUSB::CTascamUSB() {
+}
+
+
+/**
+* Initializes the USB connection.
+* \throw e Error message
+*/
+void CTascamUSB::init() throw(const char*) {
 	int r = libusb_init(&pUSBContext);
 	if (r < 0) {
 		throw "Error in creating USB context\n";
@@ -15,10 +23,15 @@ CTascamUSB::CTascamUSB() throw(const char*){
 	}
 }
 
+
+/**
+* Destructor.
+*/
 CTascamUSB::~CTascamUSB() {
 	libusb_close(pUSBDevHandle);
 	libusb_exit(pUSBContext);
 }
+
 
 /**
 * Wrapper function
@@ -40,6 +53,9 @@ CTascamUSB::~CTascamUSB() {
 int CTascamUSB::control(uint8_t bmRequestType, uint8_t bRequest, 
 	uint8_t wValue, uint8_t wIndex, unsigned char* data, 
 	uint16_t wLength, unsigned int timeout) {
+
+    if (pUSBDevHandle == NULL)
+        return -1;
 	
 	return libusb_control_transfer(pUSBDevHandle, bmRequestType, bRequest, 
 		wValue, wIndex, data, wLength, timeout);
