@@ -130,12 +130,20 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     // Adding threshold slider
     addAndMakeVisible(compThresholdSlider);
     compThresholdSlider.setRange(-32,0);
-    compThresholdSlider.setTopLeftPosition(700,22);
+    compThresholdSlider.setTopLeftPosition(750,22);
     compThresholdSlider.addListener(this);
     compThresholdLabel.setColour(Label::ColourIds::textColourId, Colours::white);
-    compThresholdLabel.setText("Hi", dontSendNotification);
+    compThresholdLabel.setText("Threshold", dontSendNotification);
     compThresholdLabel.attachToComponent(&compThresholdSlider, true);
 
+    // Adding Attack slider
+    addAndMakeVisible(compAttackSlider);
+    compAttackSlider.setRange(-32,0);
+    compAttackSlider.setTopLeftPosition(750,52);
+    compAttackSlider.addListener(this);
+    compAttackLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    compAttackLabel.setText("Attack", dontSendNotification);
+    compAttackLabel.attachToComponent(&compAttackSlider, true);
 
     // Everything is set up, now load the channels values
     reloadValues();  
