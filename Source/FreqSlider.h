@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    FreqSlider.h
-    Created: 10 Jul 2016 12:06:45am
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #ifndef FREQSLIDER_H_INCLUDED
 #define FREQSLIDER_H_INCLUDED
 
@@ -15,8 +5,8 @@
 #include "EQSlider.h"
 #include <vector>
 
-//==============================================================================
-/*
+/**
+* Custom Slider for the EQs frequencies ranges.
 */
 class FreqSlider    : public EQSlider
 {
@@ -28,7 +18,7 @@ public:
     void resized() override;
     double getValue();
     void setValue(unsigned int);
-    String getTextFromValue(double value) override;
+    String getTextFromValue(double value);
 
 private:
     std::vector<unsigned int> freqList;

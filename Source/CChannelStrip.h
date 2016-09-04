@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    CChannelStrip.h
-    Created: 8 Jul 2016 2:14:30pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #ifndef CCHANNELSTRIP_H_INCLUDED
 #define CCHANNELSTRIP_H_INCLUDED
 
@@ -23,10 +13,11 @@
 * \todo int return values vor setters no longer neccessary, as exceptions will 
 * be thrown.
 * \todo some exception class based on std::exception would be much cooler!
+* \todo All frequency values should be looked up for verification and internal
+* storage and then be reverse-lookuped, when their getter is being called.
 */
 class CChannelStrip {
 	
-
 public:
 	CChannelStrip(unsigned char, CTascamUSB*) throw(const char*);
 	~CChannelStrip();
@@ -93,7 +84,7 @@ public:
 	bool getEQHiMidOn();
 	bool getEQHiOn();
 
-    static const float* getCompRatioList();
+    static const std::vector<float> getCompRatioList();
 
     std::vector<unsigned int> getEQLowFreqList();
     std::vector<unsigned int> getEQLowMidFreqList();	
@@ -146,7 +137,7 @@ private:
 	int updateEQHiMid() throw(const char*);
 	int updateEQHi() throw(const char*);
 
-    static const float validCompRatios[];
+    static const std::vector<float> validCompRatios;
 	
 	struct sFreqMap {
 	    unsigned int freq;

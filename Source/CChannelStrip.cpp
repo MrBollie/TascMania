@@ -3,11 +3,12 @@
 #include <iomanip>
 #include <sstream>
 
-const float CChannelStrip::validCompRatios[15] = { 
+const std::vector<float> CChannelStrip::validCompRatios = { 
         1, 1.1, 1.3, 1.5, 1.7, 2.0, 2.5, 3, 3.5, 4, 5, 6, 8, 16, 0 
 };
 
-CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) throw(const char*) {
+CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p) 
+    throw(const char*) {
     if (id < 1 || id > 16)
         throw "Invalid channel ID. Must be 1-16";
         
@@ -141,9 +142,6 @@ void CChannelStrip::setPan(char value) throw(const char*) {
         
     vPan = value;
     
-	std::cout << "Chan: " << (int)channelId << std::endl;
-	std::cout << "Value: " << (int)value << std::endl;
-
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
@@ -254,13 +252,14 @@ void CChannelStrip::setCompRatio(float v) throw(const char*) {
     // found    
     for (int i = 0 ; i < 15 ; i++) {
         if (v == CChannelStrip::validCompRatios[i]) {
-            vCompRatio = (v == 0 ? 0xff : v);
+            vCompRatio = (v == 0 ? 0xff : (char)v * 10);
             updateComp();
             return;
         }
     }
     
-    throw "Invalid compressor ratio (valid values: 1.0, 1.1, 1.3, 1.5, 1.7, 2.0, 2.5, 3, 3.5, 4, 5, 6, 8, 16 and 0 for inf";
+    throw "Invalid compressor ratio (valid values: 1.0, 1.1, 1.3, 1.5, 1.7, "
+        "2.0, 2.5, 3, 3.5, 4, 5, 6, 8, 16 and 0 for inf";
 }
 
 
@@ -273,7 +272,7 @@ void CChannelStrip::setEQLowGain(char v) throw(const char*) {
     if (v < 0 || v > 12) 
         throw "Invalid low EQ gain (use range 0 to 12)";
 
-    vEQLowGain = v;
+    vEQLowGain = lookupEQGain(v);
     updateEQLow();
 }
 
@@ -284,7 +283,7 @@ void CChannelStrip::setEQLowGain(char v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
-    vEQLowMidGain = v;
+    vEQLowMidGain = lookupEQGain(v);
     updateEQLowMid();
 }
 
@@ -295,7 +294,7 @@ void CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
-    vEQHiMidGain = v;
+    vEQHiMidGain = lookupEQGain(v);
     updateEQHiMid();
 }
 
@@ -306,7 +305,7 @@ void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQHiGain(char v) throw(const char*) {
-    vEQHiGain = v;
+    vEQHiGain = lookupEQGain(v);
     updateEQHi();
 }
 
@@ -318,7 +317,7 @@ void CChannelStrip::setEQHiGain(char v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
-    vEQLowFreq = v;
+    vEQLowFreq = lookupEQFreq(v);
     updateEQLow();
 }
 
@@ -330,7 +329,7 @@ void CChannelStrip::setEQLowFreq(unsigned int v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQLowMidFreq(unsigned int v) throw(const char*) {
-    vEQLowMidFreq = v;
+    vEQLowMidFreq = lookupEQFreq(v);
     updateEQLowMid();
 }
 
@@ -342,7 +341,7 @@ void CChannelStrip::setEQLowMidFreq(unsigned int v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQHiMidFreq(unsigned int v) throw(const char*) {
-    vEQHiMidFreq = v;
+    vEQHiMidFreq = lookupEQFreq(v);
     updateEQHiMid();
 }
 
@@ -354,7 +353,7 @@ void CChannelStrip::setEQHiMidFreq(unsigned int v) throw(const char*) {
 * \todo range check
 */
 void CChannelStrip::setEQHiFreq(unsigned int v) throw(const char*) {
-    vEQHiFreq = v;
+    vEQHiFreq = lookupEQFreq(v);
     updateEQHi();
 }
 
@@ -366,8 +365,7 @@ void CChannelStrip::setEQHiFreq(unsigned int v) throw(const char*) {
 * \throw Exception message in case of an error
 */
 void CChannelStrip::setEQLowMidQ(float v) throw(const char*) {
-    // A bit uggly, as the actually range check is done by the update method. :(
-    vEQLowMidQ = v;
+    vEQLowMidQ = lookupEQQ(v);
     updateEQLowMid();
 }
 
@@ -379,7 +377,7 @@ void CChannelStrip::setEQLowMidQ(float v) throw(const char*) {
 * \throw Exception message in case of an error
 */
 void CChannelStrip::setEQHiMidQ(float v) throw(const char*) {
-    vEQHiMidQ = v;
+    vEQHiMidQ = lookupEQQ(v);
     updateEQHiMid();
 }
 
@@ -482,14 +480,14 @@ unsigned char CChannelStrip::getCompGain() {
 * \return t Ratio
 */
 float CChannelStrip::getCompRatio() {
-    return vCompRatio;
+    return vCompRatio/10;
 }
 
 /**
 * Returns an array of valid compressor ratios.
 * \return validCompRatios An array containing valid comp ratios.
 */
-const float* CChannelStrip::getCompRatioList() {
+const std::vector<float> CChannelStrip::getCompRatioList() {
     return validCompRatios;
 }
 
@@ -499,7 +497,7 @@ const float* CChannelStrip::getCompRatioList() {
 * \return low band gain
 */
 char CChannelStrip::getEQLowGain() {
-    return vEQLowGain;
+    return revLookupEQGain(vEQLowGain);
 }
 
 
@@ -508,7 +506,7 @@ char CChannelStrip::getEQLowGain() {
 * \return low mid band gain
 */
 char CChannelStrip::getEQLowMidGain() {
-    return vEQLowMidGain;
+    return revLookupEQGain(vEQLowMidGain);
 }
 
 
@@ -517,7 +515,7 @@ char CChannelStrip::getEQLowMidGain() {
 * \return hi mid band gain
 */
 char CChannelStrip::getEQHiMidGain() {
-    return vEQHiMidGain;
+    return revLookupEQGain(vEQHiMidGain);
 }
 
 
@@ -526,31 +524,31 @@ char CChannelStrip::getEQHiMidGain() {
 * \return hi band gain
 */
 char CChannelStrip::getEQHiGain() {
-    return vEQHiGain;
+    return revLookupEQGain(vEQHiGain);
 }
 
 unsigned int CChannelStrip::getEQLowFreq() {
-    return vEQLowFreq;
+    return revLookupEQFreq(vEQLowFreq);
 }
 
 unsigned int CChannelStrip::getEQLowMidFreq() {
-    return vEQLowMidFreq;
+    return revLookupEQFreq(vEQLowMidFreq);
 }
 
 unsigned int CChannelStrip::getEQHiMidFreq() {
-    return vEQHiMidFreq;
+    return revLookupEQFreq(vEQHiMidFreq);
 }
 
 unsigned int CChannelStrip::getEQHiFreq() {
-    return vEQHiFreq;
+    return revLookupEQFreq(vEQHiFreq);
 }
 
 float CChannelStrip::getEQLowMidQ() {
-    return vEQLowMidQ;
+    return revLookupEQQ(vEQLowMidQ);
 }
 
 float CChannelStrip::getEQHiMidQ() {
-    return vEQHiMidQ;
+    return revLookupEQQ(vEQHiMidQ);
 }
 
 bool CChannelStrip::getEQLowOn() {
@@ -602,15 +600,12 @@ int CChannelStrip::updateComp() throw(const char*) {
 
 
 int CChannelStrip::updateEQLow() throw(const char*) {
-    char f = lookupEQFreq(vEQLowFreq);
-    char g = lookupEQGain(vEQLowGain);
-    
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x01,
-		0x52, 0x02, g,
-		0x53, 0x02, f,
+		0x52, 0x02, vEQLowGain,
+		0x53, 0x02, vEQLowFreq,
 		0x54, 0x02, 0xff,
 		0x55, 0x02, (vEQLowOn ? 0x01 : 0x00),
 		0x00, 0x00
@@ -620,17 +615,13 @@ int CChannelStrip::updateEQLow() throw(const char*) {
 }
 
 int CChannelStrip::updateEQLowMid() throw(const char*) {            	
-    char f = lookupEQFreq(vEQLowMidFreq);
-    char g = lookupEQGain(vEQLowMidGain);
-    char q = lookupEQQ(vEQLowMidQ);
-
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x02,
-		0x52, 0x02, g,
-		0x53, 0x02, f,
-		0x54, 0x02, q,
+		0x52, 0x02, vEQLowMidGain,
+		0x53, 0x02, vEQLowMidFreq,
+		0x54, 0x02, vEQLowMidQ,
 		0x55, 0x02, (vEQLowMidOn ? 0x01 : 0x00),
 		0x00, 0x00
 	};
@@ -645,17 +636,13 @@ int CChannelStrip::updateEQLowMid() throw(const char*) {
 }
 
 int CChannelStrip::updateEQHiMid() throw(const char*) {            	
-    char f = lookupEQFreq(vEQHiMidFreq);
-    char g = lookupEQGain(vEQHiMidGain);
-    char q = lookupEQQ(vEQLowMidQ);
-
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x03,
-		0x52, 0x02, g,
-		0x53, 0x02, f,
-		0x54, 0x02, q,
+		0x52, 0x02, vEQHiMidGain,
+		0x53, 0x02, vEQHiMidFreq,
+		0x54, 0x02, vEQLowMidQ,
 		0x55, 0x02, (vEQHiMidOn ? 0x01 : 0x00),
 		0x00, 0x00
 	};
@@ -670,15 +657,12 @@ int CChannelStrip::updateEQHiMid() throw(const char*) {
 }
 
 int CChannelStrip::updateEQHi() throw(const char*) {            	
-    char f = lookupEQFreq(vEQHiFreq);
-    char g = lookupEQGain(vEQHiGain);
-
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x04,
-		0x52, 0x02, g,
-		0x53, 0x02, f,
+		0x52, 0x02, vEQHiGain,
+		0x53, 0x02, vEQHiFreq,
 		0x54, 0x02, 0xff,
 		0x55, 0x02, (vEQHiOn ? 0x01 : 0x00),
 		0x00, 0x00
@@ -703,11 +687,27 @@ char CChannelStrip::lookupEQGain(char g) throw(const char*) {
 
 
 /**
+* This method converts from the internal EQ gain value to the display value.
+* \param g Internal gain value
+* \return g Display gain value
+* \throw Exception message in case of an error
+*/
+char CChannelStrip::revLookupEQGain(char g) throw(const char*) {
+    if (g < -12 or g > 12) 
+        throw "Invalid EQ gain range. Must be from -12 to 12dB";
+    
+    // Normalize it to 0
+    return (char)g+12;
+}
+
+
+/**
 * This method takes a frequency f and tries to find the matching
 * value on the frequency map. It then returns its value used
 * for USB communication. For a list of valid frequencies check out
 * the getEQ.*FreqList() methods. It will throw an exception if 
 * it can't find a valid mapping.
+* \param f Frequency to lookup
 * \return freqval The corresponding value for USB communication
 * \throw Exception message in case of an error 
 */
@@ -723,10 +723,31 @@ char CChannelStrip::lookupEQFreq(unsigned int f) throw(const char*) {
 
 
 /**
-* This method takes a EQ quality value and tries to find the corresponding
+* This method takes the internal represenation of frequency f and tries to find 
+* the matching frequency from the map. It then returns this value. For a list of
+* valid frequencies check out the getEQ.*FreqList() methods. It will throw an 
+* exception if it can't find a valid mapping.
+* \param f Internal representation of the frequency
+* \return freq The corresponding frequency
+* \throw Exception message in case of an error 
+*/
+unsigned int CChannelStrip::revLookupEQFreq(char f) throw(const char*) {
+    for (int i = 0 ; i < freqMap.size() ; i++) {
+        if (freqMap[i].val == f) {
+            return freqMap[i].freq;
+        }
+    }
+    throw "Invalid internal frequency supplied.";
+    return -1;
+}
+
+
+/**
+* This method takes an EQ quality value and tries to find the corresponding
 * value on the Q-map. It then returns its value used for USB communication. 
 * For a list of valid quality values, see the getEQ.*QList()-methods. It will 
 * throw an exception if it can't find a valid mapping.
+* \param q Value to look up
 * \return qval The corresponding value for USB communication
 * \throw Exception message in case of an error 
 */
@@ -737,6 +758,26 @@ char CChannelStrip::lookupEQQ(float q) throw(const char*) {
         }
     }
     throw "Invalid Q supplied.";
+    return -1;
+}
+
+
+/**
+* This method takes the interal EQ quality value and tries to find the 
+* corresponding display value on the Q-map. It then this value. For a list of 
+* valid quality values, see the getEQ.*QList()-methods. It will throw an 
+* exception if it can't find a valid mapping.
+* \param q Internal value to look up
+* \return qval The corresponding value for USB communication
+* \throw Exception message in case of an error 
+*/
+char CChannelStrip::revLookupEQQ(float q) throw(const char*) {
+    for (int i = 0 ; i < qMap.size() ; i++) {
+        if (qMap[i].val == q) {
+            return qMap[i].q;
+        }
+    }
+    throw "Invalid internal Q supplied.";
     return -1;
 }
 

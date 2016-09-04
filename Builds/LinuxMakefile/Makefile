@@ -49,6 +49,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/RatioSlider_3938952d.o \
   $(OBJDIR)/EQGraph_3f4b2b83.o \
   $(OBJDIR)/QSlider_760a3413.o \
   $(OBJDIR)/EQSlider_66b70496.o \
@@ -92,6 +93,11 @@ clean:
 strip:
 	@echo Stripping TascMania
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/RatioSlider_3938952d.o: ../../Source/RatioSlider.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling RatioSlider.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/EQGraph_3f4b2b83.o: ../../Source/EQGraph.cpp
 	-@mkdir -p $(OBJDIR)

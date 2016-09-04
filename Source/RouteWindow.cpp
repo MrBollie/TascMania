@@ -1,18 +1,7 @@
-/*
-  ==============================================================================
-
-    RouteWindow.cpp
-    Created: 8 Jul 2016 12:20:30pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "RouteWindow.h"
 #include "RouteComponent.h"
 
-//==============================================================================
 RouteWindow::RouteWindow (String name, CRouting *pr)  : DocumentWindow (name,
                                                     Colours::lightgrey,
                                                     DocumentWindow::allButtons)
@@ -24,9 +13,13 @@ RouteWindow::RouteWindow (String name, CRouting *pr)  : DocumentWindow (name,
     setVisible (false);
 }
 
+
+/**
+* Catch close button press and just hide the window.
+*/
 void RouteWindow::closeButtonPressed() {
-            // Just hide me
-            setVisible(false);
+    // Just hide me
+    setVisible(false);
 }
 
  

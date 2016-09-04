@@ -5,6 +5,8 @@
               jucerVersion="4.2.3">
   <MAINGROUP id="soRM56" name="TascMania">
     <GROUP id="{773724AE-FFA4-32B2-5F6E-D5CFDC405B50}" name="Source">
+      <FILE id="uuqAum" name="RatioSlider.cpp" compile="1" resource="0" file="Source/RatioSlider.cpp"/>
+      <FILE id="osZOea" name="RatioSlider.h" compile="0" resource="0" file="Source/RatioSlider.h"/>
       <FILE id="BVv4Kq" name="EQGraph.h" compile="0" resource="0" file="Source/EQGraph.h"/>
       <FILE id="dEc70i" name="EQGraph.cpp" compile="1" resource="0" file="Source/EQGraph.cpp"/>
       <FILE id="wEF14Z" name="QSlider.cpp" compile="1" resource="0" file="Source/QSlider.cpp"/>
