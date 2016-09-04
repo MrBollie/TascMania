@@ -21,7 +21,7 @@ public:
     String getTextFromValue(double value) override;
 
 private:
-    std::vector<float> qList;
+    std::vector<float> ratioList;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RatioSlider)
 };
 

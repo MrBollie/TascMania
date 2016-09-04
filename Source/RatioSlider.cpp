@@ -1,26 +1,26 @@
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "QSlider.h"
+#include "RatioSlider.h"
 
 /**
 * Standard constructor.
 */
-QSlider::QSlider(std::vector<float> q) : EQSlider()
+RatioSlider::RatioSlider(std::vector<float> r) : EQSlider()
 {
-    qList = q;
-    setRange(0, qList.size()-1, 1);
+    ratioList = r;
+    setRange(0, ratioList.size()-1, 1);
 }
 
-QSlider::~QSlider()
+RatioSlider::~RatioSlider()
 {
 }
 
-void QSlider::paint (Graphics& g)
+void RatioSlider::paint (Graphics& g)
 {
     Slider::paint(g);
 
 }
 
-void QSlider::resized()
+void RatioSlider::resized()
 {
     Slider::resized();
     // This method is where you should set the bounds of any child
@@ -28,25 +28,25 @@ void QSlider::resized()
 
 }
 
-String QSlider::getTextFromValue(double value) {
-    if (value < qList.size()) {
-        double v = qList[(int)value];
+String RatioSlider::getTextFromValue(double value) {
+    if (value < ratioList.size()) {
+        double v = ratioList[(int)value];
         return String::formatted("%.2f", v);
     }
     return String("unk");
 }
 
-double QSlider::getValue() {
+double RatioSlider::getValue() {
     double v = Slider::getValue();
-    if( v < 0 || v > qList.size())
+    if( v < 0 || v > ratioList.size())
         return 0;
     
-    return (double)qList[(int)v];
+    return (double)ratioList[(int)v];
 }
 
-void QSlider::setValue(float v) {
-    for (int i = 0 ; i < qList.size() ; i++) {
-        if (qList[i] == v) {
+void RatioSlider::setValue(float v) {
+    for (int i = 0 ; i < ratioList.size() ; i++) {
+        if (ratioList[i] == v) {
             Slider::setValue(i);
             std::cerr << "Setting default value " << std::to_string(v) << std::endl;
             return;

@@ -15,24 +15,6 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p)
     channelId = id;
     pUSB = p;
     
-    // Init Values
-    vEQLowGain = 0;
-    vEQLowMidGain = 0;
-    vEQHiMidGain = 0;
-    vEQHiGain = 0;
-    vEQLowFreq = 80;
-    vEQLowMidFreq = 300;
-    vEQHiMidFreq = 1200;
-    vEQHiFreq = 5000;
-    vEQLowMidQ = 1;
-    vEQHiMidQ = 1;
-
-    vEQLowOn = false;
-    vEQLowMidOn = false;
-    vEQHiMidOn = false;
-    vEQHiOn = false;
-    
-    
     // Setting up frequency steps
     char cnt=0x00;
     sFreqMap f;
@@ -103,7 +85,25 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p)
         q.val = cnt++;
         qMap.push_back(q);
     }
+
+    // Init Values
+    vEQLowGain = 12;        // 0
+    vEQLowMidGain = 12;     // 0
+    vEQHiMidGain = 12;      // 0
+    vEQHiGain = 12;         // 0
+    vEQLowFreq = 0x05;      // 80
+    vEQLowMidFreq = 0x0e;   // 300
+    vEQHiMidFreq = 0x1b;    // 1200
+    vEQHiFreq = 0x2f;       // 5000
+    vEQLowMidQ = 0x02;      // 1
+    vEQHiMidQ = 0x02;       // 1
+
+    vEQLowOn = false;
+    vEQLowMidOn = false;
+    vEQHiMidOn = false;
+    vEQHiOn = false;
 }
+
 
 CChannelStrip::~CChannelStrip() {
 }
@@ -572,7 +572,9 @@ bool CChannelStrip::getEQHiOn() {
 * Returns the channels numeric ID.
 * \return id Channel ID
 */
-unsigned char CChannelStrip::getId() { return channelId; }
+unsigned char CChannelStrip::getId() { 
+    return channelId; 
+}
 
 
 /**
@@ -646,7 +648,7 @@ int CChannelStrip::updateEQHiMid() throw(const char*) {
 		0x55, 0x02, (vEQHiMidOn ? 0x01 : 0x00),
 		0x00, 0x00
 	};
-		for (int i = 0 ; i < 23 ; i++) {
+	for (int i = 0 ; i < 23 ; i++) {
 	    std::stringstream stream;
         stream << std::hex << (int)data[i];
         std::string result = stream.str();
@@ -693,11 +695,11 @@ char CChannelStrip::lookupEQGain(char g) throw(const char*) {
 * \throw Exception message in case of an error
 */
 char CChannelStrip::revLookupEQGain(char g) throw(const char*) {
-    if (g < -12 or g > 12) 
-        throw "Invalid EQ gain range. Must be from -12 to 12dB";
+    if (g < 0 or g > 24) 
+        throw "Invalid EQ gain supplied.";
     
     // Normalize it to 0
-    return (char)g+12;
+    return (char)g-12;
 }
 
 
@@ -768,10 +770,10 @@ char CChannelStrip::lookupEQQ(float q) throw(const char*) {
 * valid quality values, see the getEQ.*QList()-methods. It will throw an 
 * exception if it can't find a valid mapping.
 * \param q Internal value to look up
-* \return qval The corresponding value for USB communication
+* \return qval The corresponding display value
 * \throw Exception message in case of an error 
 */
-char CChannelStrip::revLookupEQQ(float q) throw(const char*) {
+float CChannelStrip::revLookupEQQ(char q) throw(const char*) {
     for (int i = 0 ; i < qMap.size() ; i++) {
         if (qMap[i].val == q) {
             return qMap[i].q;

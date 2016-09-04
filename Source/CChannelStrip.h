@@ -153,8 +153,11 @@ private:
 	std::vector<sQMap> qMap;
 	
 	char lookupEQFreq(unsigned int) throw(const char*);
+    unsigned int revLookupEQFreq(char) throw(const char*);
 	char lookupEQQ(float) throw(const char*);
+    float revLookupEQQ(char) throw(const char*);
 	char lookupEQGain(char) throw(const char*);
+	char revLookupEQGain(char) throw(const char*);
 	
 	CTascamUSB	*pUSB;
 };
