@@ -43,6 +43,8 @@ private:
     MasterStrip *pMasterStrip;
     RouteWindow *pRouteWindow;
     TextButton routingButton;
+    TextButton sceneButton[4];
+    TextButton saveButton;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
 };

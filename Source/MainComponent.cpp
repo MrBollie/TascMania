@@ -37,12 +37,43 @@ MainContentComponent::MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR)
     routingButton.setColour(TextButton::ColourIds::buttonColourId, Colour(0xff797979));
     routingButton.setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xff6f0202));
     routingButton.setTopLeftPosition(963,2);
-    routingButton.setSize(59,25);
+    routingButton.setSize(60,25);
     routingButton.setButtonText("Routing");
+
+    // Adding scene buttons
+    int x = 0;
+    int y = 0;
+    for (int i = 0 ; i < 4 ; i++) {
+        addAndMakeVisible(sceneButton[i]);
+        sceneButton[i].addListener(this);
+        sceneButton[i].setColour(TextButton::ColourIds::buttonColourId, Colour(0xff797979));
+        sceneButton[i].setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xff6f0202));
+        sceneButton[i].setTopLeftPosition(963 + x, 28 + y);
+        sceneButton[i].setSize(30, 25);
+        sceneButton[i].setButtonText(String(i+1));
+        sceneButton[i].setRadioGroupId(1);
+        sceneButton[i].setClickingTogglesState(true);
+        if (i == 1) {
+            y += 25;
+            x = 0;
+        }
+        else {
+            x += 30;
+        }
+    }
     
+    // Adding Scene save button
+    addAndMakeVisible(saveButton);
+    saveButton.addListener(this);
+    saveButton.setColour(TextButton::ColourIds::buttonColourId, Colour(0xff797979));
+    saveButton.setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xff6f0202));
+    saveButton.setTopLeftPosition(963,78);
+    saveButton.setSize(60,25);
+    saveButton.setButtonText("Save");
+
     // Master strip
     pMasterStrip = new MasterStrip();
-    pMasterStrip->setTopLeftPosition(963,29);
+    pMasterStrip->setTopLeftPosition(963,106);
     addAndMakeVisible(pMasterStrip);
 }
 
