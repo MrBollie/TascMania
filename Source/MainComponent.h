@@ -1,11 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
-
 #ifndef MAINCOMPONENT_H_INCLUDED
 #define MAINCOMPONENT_H_INCLUDED
 
@@ -16,18 +8,17 @@
 #include "CTascamUSB.h"
 #include "RouteWindow.h"
 
-//==============================================================================
-/*
-    This component lives inside our window, and this is where you should put all
-    your controls and content.
+
+/**
+* Main component that holds the mixer.
 */
 class MainContentComponent   : public Component,
                                 public Button::Listener,
                                 public ChannelStrip::Listener
 {
 public:
-    //==============================================================================
-    MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR);
+    MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR,
+        ApplicationProperties *pAppProps);
     ~MainContentComponent();
 
     void paint (Graphics&) override;
@@ -37,7 +28,7 @@ public:
     void compRequested(ChannelStrip*) override;
 
 private:
-    //==============================================================================
+    ApplicationProperties *pAppProperties;
     ChannelStrip *pChannels[16];
     ChannelEQ *pChannelEQ;
     MasterStrip *pMasterStrip;

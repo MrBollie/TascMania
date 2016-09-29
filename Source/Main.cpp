@@ -34,8 +34,13 @@ public:
                 "Error", s); 
         }
         pRouting = new CRouting(pUSB);
-        routeWindow = new RouteWindow (getApplicationName(), pRouting);
-        mainWindow = new MainWindow(getApplicationName(), pUSB, routeWindow);
+        routeWindow = new RouteWindow (getApplicationName(), pRouting,
+            &appProperties
+        );
+
+        mainWindow = new MainWindow(getApplicationName(), pUSB, routeWindow, 
+            &appProperties
+        );
     }
 
     /**
@@ -71,6 +76,7 @@ private:
     ScopedPointer<RouteWindow> routeWindow;   
     CTascamUSB *pUSB;
     CRouting *pRouting;
+    ApplicationProperties appProperties;
 };
 
 //==============================================================================

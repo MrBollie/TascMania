@@ -1,18 +1,11 @@
-/*
-  ==============================================================================
-
-    MasterStrip.cpp
-    Created: 8 Jul 2016 5:14:56pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MasterStrip.h"
 #include "MainWindow.h"
 
-//==============================================================================
+/**
+* Constructor for the master strip component.
+* Sets up all the controls.
+*/
 MasterStrip::MasterStrip()
 {
     // In your constructor, you should add any child components, and

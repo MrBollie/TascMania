@@ -1,20 +1,20 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
-
 #include "MainComponent.h"
 #include "CChannelStrip.h"
-#include <vector>
 
-//==============================================================================
-MainContentComponent::MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR)
+
+/**
+* Constructor for our main component
+* \param pUSB   Pointer to our USB communication layer
+* \param pR     Pointer to the route window, to open and close it from this 
+*               component
+* \param pAppProps  Pointer to the application properties store
+*/
+MainContentComponent::MainContentComponent(CTascamUSB *pUSB, RouteWindow *pR, 
+    ApplicationProperties *pAppProps)
 {
     setSize (1024, 600);
     pRouteWindow = pR;
+    pAppProperties = pAppProps;
 
     // Making channel strips
     for (int i = 0 ; i < 16 ; i++) {
@@ -104,6 +104,11 @@ void MainContentComponent::resized()
     // update their positions.
 }
 
+
+/**
+* Click handler, making the route window visible
+* \param button Button that has been clicked.
+*/
 void MainContentComponent::buttonClicked (Button* button) {
     if (button == &routingButton) {
         pRouteWindow->setVisible(true);

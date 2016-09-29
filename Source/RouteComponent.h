@@ -1,27 +1,17 @@
-/*
-  ==============================================================================
-
-    RouteComponent.h
-    Created: 8 Jul 2016 12:40:42pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #ifndef ROUTECOMPONENT_H_INCLUDED
 #define ROUTECOMPONENT_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CRouting.h"
 
-//==============================================================================
-/*
+/**
+* Component that holds the UI for output routing.
 */
 class RouteComponent    : public Component,
                             public ComboBox::Listener
 {
 public:
-    RouteComponent(CRouting*);
+    RouteComponent(CRouting*, ApplicationProperties*);
     ~RouteComponent();
 
     void paint (Graphics&) override;
@@ -30,6 +20,7 @@ public:
     void comboBoxChanged(ComboBox*) override;
 
 private:
+    ApplicationProperties *pApplicationProperties;
     CRouting *pRouting;
     ComboBox outCombos[8];
     Label outLabels[8];

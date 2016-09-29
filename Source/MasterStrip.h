@@ -1,20 +1,10 @@
-/*
-  ==============================================================================
-
-    MasterStrip.h
-    Created: 8 Jul 2016 5:14:56pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #ifndef MASTERSTRIP_H_INCLUDED
 #define MASTERSTRIP_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-//==============================================================================
-/*
+/**
+* Master strip component
 */
 class MasterStrip    : public Component,
                         public Slider::Listener,

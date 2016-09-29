@@ -1,22 +1,18 @@
-/*
-  ==============================================================================
-
-    RouteComponent.cpp
-    Created: 8 Jul 2016 12:40:42pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "RouteComponent.h"
 
-//==============================================================================
-RouteComponent::RouteComponent(CRouting *pr)
+
+/**
+* Constructor for the component holding the UI for output routing.
+* \param pr Pointer to the routing communcation object
+* \param pAppProps  Pointer to the application properties store
+*/
+RouteComponent::RouteComponent(CRouting *pr, ApplicationProperties *pAppProps)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     pRouting = pr;
+    pApplicationProperties = pAppProps;
     
     setSize(223,212);
     for (int i = 0 ; i < 8 ; i++) {
