@@ -15,6 +15,7 @@
 #include "EQGraph.h"
 #include "CChannelStrip.h"
 #include "FreqSlider.h"
+#include "RatioSlider.h"
 #include "QSlider.h"
 
 /**
@@ -68,11 +69,13 @@ private:
 
     // Compressor
     Label compThresholdLabel;
+    Label compRatioLabel;
     Label compAttackLabel;
     Label compReleaseLabel;
     Label compGainLabel;
 
     EQSlider compThresholdSlider;
+    RatioSlider *pCompRatioSlider;
     EQSlider compAttackSlider;
     EQSlider compReleaseSlider;
     EQSlider compGainSlider;

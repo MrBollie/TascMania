@@ -1,22 +1,13 @@
-/*
-  ==============================================================================
-
-    ChannelEQ.cpp
-    Created: 8 Jul 2016 4:45:14pm
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "ChannelEQ.h"
 
-//==============================================================================
+/**
+* Constructor for the channel EQ component.
+* \param pC ChannelStrip that is selected.
+*/
 ChannelEQ::ChannelEQ(CChannelStrip *pC)
 {
     pChannel = pC;
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
     setSize(959, 198);
     
     // Adding EQ Graph
@@ -25,7 +16,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
 
     // Gain Label
     addAndMakeVisible(&gainLabel);
-    gainLabel.setText("Freq", dontSendNotification);
+    gainLabel.setText("Gain", dontSendNotification);
     gainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     gainLabel.setTopLeftPosition(300, 1);
     gainLabel.setSize(50,20);
@@ -128,22 +119,49 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     */
     
     // Adding threshold slider
-    addAndMakeVisible(compThresholdSlider);
+    addAndMakeVisible(&compThresholdSlider);
     compThresholdSlider.setRange(-32,0);
-    compThresholdSlider.setTopLeftPosition(750,22);
+    compThresholdSlider.setTopLeftPosition(860,2);
     compThresholdSlider.addListener(this);
     compThresholdLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     compThresholdLabel.setText("Threshold", dontSendNotification);
     compThresholdLabel.attachToComponent(&compThresholdSlider, true);
 
+    // Adding ratio slider
+    pCompRatioSlider = new RatioSlider(pChannel->getCompRatioList());
+    addAndMakeVisible(pCompRatioSlider);
+    pCompRatioSlider->setTopLeftPosition(860,32);
+    pCompRatioSlider->addListener(this);
+    compRatioLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    compRatioLabel.setText("Ratio", dontSendNotification);
+    compRatioLabel.attachToComponent(pCompRatioSlider, true);
+
+    // Adding Gain slider
+    addAndMakeVisible(compGainSlider);
+    compGainSlider.setRange(0,20);
+    compGainSlider.setTopLeftPosition(860,62);
+    compGainSlider.addListener(this);
+    compGainLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    compGainLabel.setText("Gain", dontSendNotification);
+    compGainLabel.attachToComponent(&compGainSlider, true);
+
     // Adding Attack slider
     addAndMakeVisible(compAttackSlider);
-    compAttackSlider.setRange(-32,0);
-    compAttackSlider.setTopLeftPosition(750,52);
+    compAttackSlider.setRange(2,200);
+    compAttackSlider.setTopLeftPosition(860,92);
     compAttackSlider.addListener(this);
     compAttackLabel.setColour(Label::ColourIds::textColourId, Colours::white);
     compAttackLabel.setText("Attack", dontSendNotification);
     compAttackLabel.attachToComponent(&compAttackSlider, true);
+
+    // Adding Release slider
+    addAndMakeVisible(compReleaseSlider);
+    compReleaseSlider.setRange(10,1000);
+    compReleaseSlider.setTopLeftPosition(860,122);
+    compReleaseSlider.addListener(this);
+    compReleaseLabel.setColour(Label::ColourIds::textColourId, Colours::white);
+    compReleaseLabel.setText("Release", dontSendNotification);
+    compReleaseLabel.attachToComponent(&compReleaseSlider, true);
 
     // Everything is set up, now load the channels values
     reloadValues();  
@@ -157,6 +175,7 @@ ChannelEQ::~ChannelEQ()
     delete pHiFreqSlider;
     delete pLowMidQSlider;
     delete pHiMidQSlider;
+    delete pCompRatioSlider;
 }
 
 void ChannelEQ::paint (Graphics& g)
@@ -265,4 +284,11 @@ void ChannelEQ::reloadValues() {
     // Qs
     pLowMidQSlider->setValue(pChannel->getEQLowMidQ());
     pHiMidQSlider->setValue(pChannel->getEQHiMidQ());
+
+    // Comp
+    compThresholdSlider.setValue(pChannel->getCompThreshold());
+    compAttackSlider.setValue(pChannel->getCompThreshold());
+    compGainSlider.setValue(pChannel->getCompThreshold());
+    compReleaseSlider.setValue(pChannel->getCompThreshold());
+    pCompRatioSlider->setValue(pChannel->getCompRatio());
 }

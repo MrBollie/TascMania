@@ -31,6 +31,7 @@ void RatioSlider::resized()
 String RatioSlider::getTextFromValue(double value) {
     if (value < ratioList.size()) {
         double v = ratioList[(int)value];
+        if (v == 0) return "inf";
         return String::formatted("%.2f", v);
     }
     return String("unk");

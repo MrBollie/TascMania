@@ -1,17 +1,10 @@
-/*
-  ==============================================================================
-
-    QSlider.cpp
-    Created: 10 Jul 2016 12:06:45am
-    Author:  rajan
-
-  ==============================================================================
-*/
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "QSlider.h"
 
-//==============================================================================
+/**
+* Constructor for EQ Quality slider.
+* \param q A vector of valid quality values.
+*/
 QSlider::QSlider(std::vector<float> q) : EQSlider()
 {
     qList = q;

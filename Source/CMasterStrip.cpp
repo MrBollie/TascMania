@@ -102,8 +102,6 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p)
     vEQLowMidOn = false;
     vEQHiMidOn = false;
     vEQHiOn = false;
-   
-    // \todo Comp init
 }
 
 
@@ -223,7 +221,7 @@ void CChannelStrip::setCompAttack(unsigned char v) throw(const char*) {
 * \throw Exception message in case of an error
 */
 void CChannelStrip::setCompRelease(unsigned int v) throw(const char*) {
-    if (v < 10 || v > 1000) 
+    if (v < 1 || v > 100) 
         throw "Invalid compressor release (use range 10 to 1000)";
     vCompRelease = v;
     updateComp();
@@ -254,7 +252,7 @@ void CChannelStrip::setCompRatio(float v) throw(const char*) {
     // found    
     for (int i = 0 ; i < 15 ; i++) {
         if (v == CChannelStrip::validCompRatios[i]) {
-            vCompRatio = v;
+            vCompRatio = (v == 0 ? 0xff : (char)v * 10);
             updateComp();
             return;
         }
@@ -304,10 +302,9 @@ void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
 /** 
 * Sets the gain of the hi band on the EQ
 * \param v Gain range goes from 0 to 12.
+* \todo range check
 */
 void CChannelStrip::setEQHiGain(char v) throw(const char*) {
-    if (v < -12 || v > 12)
-        throw "Invalid gain value (range: -12 to 12)";
     vEQHiGain = lookupEQGain(v);
     updateEQHi();
 }
@@ -483,7 +480,7 @@ unsigned char CChannelStrip::getCompGain() {
 * \return t Ratio
 */
 float CChannelStrip::getCompRatio() {
-    return vCompRatio;
+    return vCompRatio/10;
 }
 
 /**
