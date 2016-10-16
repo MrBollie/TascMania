@@ -10,11 +10,14 @@
 * A CChannelStrip object represents a single channel of the Tascam device.
 * It stores all the parameters, updates them via USB and you can access them
 * via getter and setter functions.
+*  
 * \todo int return values vor setters no longer neccessary, as exceptions will 
 * be thrown.
 * \todo some exception class based on std::exception would be much cooler!
-* \todo All frequency values should be looked up for verification and internal
-* storage and then be reverse-lookuped, when their getter is being called.
+* \todo Add indexed setters for EQ frequencies and qualities as well as comp
+* ratio. That could speed things up, when this class is being used in GUI
+* apps using sliders.
+* \todo make getters const.
 */
 class CChannelStrip {
 	
@@ -122,10 +125,10 @@ private:
     char vEQHiMidGain;
     char vEQHiGain;
 
-    unsigned int vEQLowFreq;
-    unsigned int vEQLowMidFreq;
-    unsigned int vEQHiMidFreq;
-    unsigned int vEQHiFreq;
+    char vEQLowFreq;
+    char vEQLowMidFreq;
+    char vEQHiMidFreq;
+    char vEQHiFreq;
 
     float vEQLowMidQ;
     float vEQHiMidQ;
@@ -156,8 +159,6 @@ private:
     unsigned int revLookupEQFreq(char) throw(const char*);
 	char lookupEQQ(float) throw(const char*);
     float revLookupEQQ(char) throw(const char*);
-	char lookupEQGain(char) throw(const char*);
-	char revLookupEQGain(char) throw(const char*);
 	
 	CTascamUSB	*pUSB;
 };

@@ -87,10 +87,10 @@ CChannelStrip::CChannelStrip(unsigned char id, CTascamUSB* p)
     }
 
     // Init Values
-    vEQLowGain = 12;        // 0
-    vEQLowMidGain = 12;     // 0
-    vEQHiMidGain = 12;      // 0
-    vEQHiGain = 12;         // 0
+    vEQLowGain = 0;        // 0
+    vEQLowMidGain = 0;     // 0
+    vEQHiMidGain = 0;      // 0
+    vEQHiGain = 0;         // 0
     vEQLowFreq = 0x05;      // 80
     vEQLowMidFreq = 0x0e;   // 300
     vEQHiMidFreq = 0x1b;    // 1200
@@ -267,25 +267,23 @@ void CChannelStrip::setCompRatio(float v) throw(const char*) {
 
 /** 
 * Sets the gain of the low band on the EQ
-* \param v gain of the band (range 0 to 12)
-* \throw Exception message in case of an error
+* \param v Gain range goes from 0 to 12.
 */
 void CChannelStrip::setEQLowGain(char v) throw(const char*) {
-    if (v < 0 || v > 12) 
-        throw "Invalid low EQ gain (use range 0 to 12)";
-
-    vEQLowGain = lookupEQGain(v);
+    if (v < -12 || v > 12)
+        throw "Invalid gain value (range: -12 to 12)";
+    vEQLowGain = v;
     updateEQLow();
 }
-
 
 /** 
 * Sets the gain of the low mid band on the EQ
 * \param v Gain range goes from 0 to 12.
-* \todo range check
 */
 void CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
-    vEQLowMidGain = lookupEQGain(v);
+    if (v < -12 || v > 12)
+        throw "Invalid gain value (range: -12 to 12)";
+    vEQLowMidGain = v;
     updateEQLowMid();
 }
 
@@ -293,10 +291,11 @@ void CChannelStrip::setEQLowMidGain(char v) throw(const char*) {
 /** 
 * Sets the gain of the hi mid band on the EQ
 * \param v Gain range goes from 0 to 12.
-* \todo range check
 */
 void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
-    vEQHiMidGain = lookupEQGain(v);
+    if (v < -12 || v > 12)
+        throw "Invalid gain value (range: -12 to 12)";
+    vEQHiMidGain = v;
     updateEQHiMid();
 }
 
@@ -308,7 +307,7 @@ void CChannelStrip::setEQHiMidGain(char v) throw(const char*) {
 void CChannelStrip::setEQHiGain(char v) throw(const char*) {
     if (v < -12 || v > 12)
         throw "Invalid gain value (range: -12 to 12)";
-    vEQHiGain = lookupEQGain(v);
+    vEQHiGain = v;
     updateEQHi();
 }
 
@@ -500,7 +499,7 @@ const std::vector<float> CChannelStrip::getCompRatioList() {
 * \return low band gain
 */
 char CChannelStrip::getEQLowGain() {
-    return revLookupEQGain(vEQLowGain);
+    return vEQLowGain;
 }
 
 
@@ -509,7 +508,7 @@ char CChannelStrip::getEQLowGain() {
 * \return low mid band gain
 */
 char CChannelStrip::getEQLowMidGain() {
-    return revLookupEQGain(vEQLowMidGain);
+    return vEQLowMidGain;
 }
 
 
@@ -518,7 +517,7 @@ char CChannelStrip::getEQLowMidGain() {
 * \return hi mid band gain
 */
 char CChannelStrip::getEQHiMidGain() {
-    return revLookupEQGain(vEQHiMidGain);
+    return vEQHiMidGain;
 }
 
 
@@ -527,8 +526,14 @@ char CChannelStrip::getEQHiMidGain() {
 * \return hi band gain
 */
 char CChannelStrip::getEQHiGain() {
-    return revLookupEQGain(vEQHiGain);
+    return vEQHiGain;
 }
+
+
+/**
+* Returns the frequency index of the low band.
+* \return low band frequency index
+*/
 
 unsigned int CChannelStrip::getEQLowFreq() {
     return revLookupEQFreq(vEQLowFreq);
@@ -604,12 +609,16 @@ int CChannelStrip::updateComp() throw(const char*) {
 }
 
 
+/**
+* Updating the low EQ band.
+* \throw Exception message in case of an error
+*/
 int CChannelStrip::updateEQLow() throw(const char*) {
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x01,
-		0x52, 0x02, vEQLowGain,
+		0x52, 0x02, vEQLowGain+12,
 		0x53, 0x02, vEQLowFreq,
 		0x54, 0x02, 0xff,
 		0x55, 0x02, (vEQLowOn ? 0x01 : 0x00),
@@ -619,12 +628,17 @@ int CChannelStrip::updateEQLow() throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 23, 5000);
 }
 
+
+/**
+* Updating the low mid EQ band.
+* \throw Exception message in case of an error
+*/
 int CChannelStrip::updateEQLowMid() throw(const char*) {            	
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x02,
-		0x52, 0x02, vEQLowMidGain,
+		0x52, 0x02, vEQLowMidGain+12,
 		0x53, 0x02, vEQLowMidFreq,
 		0x54, 0x02, vEQLowMidQ,
 		0x55, 0x02, (vEQLowMidOn ? 0x01 : 0x00),
@@ -640,12 +654,17 @@ int CChannelStrip::updateEQLowMid() throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 23, 5000);
 }
 
+
+/**
+* Updating the hi mid EQ band.
+* \throw Exception message in case of an error
+*/
 int CChannelStrip::updateEQHiMid() throw(const char*) {            	
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x03,
-		0x52, 0x02, vEQHiMidGain,
+		0x52, 0x02, vEQHiMidGain+12,
 		0x53, 0x02, vEQHiMidFreq,
 		0x54, 0x02, vEQLowMidQ,
 		0x55, 0x02, (vEQHiMidOn ? 0x01 : 0x00),
@@ -661,48 +680,23 @@ int CChannelStrip::updateEQHiMid() throw(const char*) {
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 23, 5000);
 }
 
+
+/**
+* Updating the hi EQ band.
+* \throw Exception message in case of an error
+*/
 int CChannelStrip::updateEQHi() throw(const char*) {            	
 	unsigned char data[] = { 
 	    0x61, 0x02, 0x04, 
 		0x62, 0x02, channelId, 
 		0x51, 0x02, 0x04,
-		0x52, 0x02, vEQHiGain,
+		0x52, 0x02, vEQHiGain+12,
 		0x53, 0x02, vEQHiFreq,
 		0x54, 0x02, 0xff,
 		0x55, 0x02, (vEQHiOn ? 0x01 : 0x00),
 		0x00, 0x00
 	};
 	return pUSB->control(0x40, 29, 0x0000, 0, data, 23, 5000);
-}
-
-
-/**
-* This method converts from the EQ gain range -12 to +12 to 
-* the corresponding value, that we transfer via USB.
-* \return g Gain value usable for USB communication
-* \throw Exception message in case of an error
-*/
-char CChannelStrip::lookupEQGain(char g) throw(const char*) {
-    if (g < -12 or g > 12) 
-        throw "Invalid EQ gain range. Must be from -12 to 12dB";
-    
-    // Normalize it to 0
-    return (char)g+12;
-}
-
-
-/**
-* This method converts from the internal EQ gain value to the display value.
-* \param g Internal gain value
-* \return g Display gain value
-* \throw Exception message in case of an error
-*/
-char CChannelStrip::revLookupEQGain(char g) throw(const char*) {
-    if (g < 0 or g > 24) 
-        throw "Invalid EQ gain supplied.";
-    
-    // Normalize it to 0
-    return (char)g-12;
 }
 
 
