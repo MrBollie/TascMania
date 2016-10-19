@@ -115,6 +115,9 @@ void MainContentComponent::buttonClicked (Button* button) {
     }
 }
 
+/**
+* \todo check if obsolete
+*/
 void MainContentComponent::compRequested(ChannelStrip *pC) {
     //pChannelEQ->setChannelStrip(pC->getCChannelStrip());
 }
@@ -135,4 +138,12 @@ void MainContentComponent::eqRequested(ChannelStrip *pC) {
         if (pChannels[i] != pC)
             pChannels[i]->disengageSelButton();
     }
+}
+
+
+/**
+* Event handler for solo button on a channel strip.
+* \param pC Channel Strip component that requested solo
+*/
+void MainContentComponent::soloRequested(ChannelStrip *pC) {
 }

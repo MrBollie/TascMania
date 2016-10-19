@@ -2,9 +2,13 @@
 
 <JUCERPROJECT id="qtOI5C" name="TascMania" projectType="guiapp" version="1.0.0"
               bundleIdentifier="eu.ca9.TascMania" includeBinaryInAppConfig="1"
-              jucerVersion="4.2.3">
+              jucerVersion="4.2.4">
   <MAINGROUP id="soRM56" name="TascMania">
     <GROUP id="{773724AE-FFA4-32B2-5F6E-D5CFDC405B50}" name="Source">
+      <FILE id="zI0Jit" name="FaderLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/FaderLookAndFeel.cpp"/>
+      <FILE id="nvM8ou" name="FaderLookAndFeel.h" compile="0" resource="0"
+            file="Source/FaderLookAndFeel.h"/>
       <FILE id="uuqAum" name="RatioSlider.cpp" compile="1" resource="0" file="Source/RatioSlider.cpp"/>
       <FILE id="osZOea" name="RatioSlider.h" compile="0" resource="0" file="Source/RatioSlider.h"/>
       <FILE id="BVv4Kq" name="EQGraph.h" compile="0" resource="0" file="Source/EQGraph.h"/>

@@ -37,12 +37,12 @@ String RatioSlider::getTextFromValue(double value) {
     return String("unk");
 }
 
-double RatioSlider::getValue() {
-    double v = Slider::getValue();
+float RatioSlider::getValue() {
+    int v = Slider::getValue();
     if( v < 0 || v > ratioList.size())
         return 0;
     
-    return (double)ratioList[(int)v];
+    return (float)ratioList[(int)v];
 }
 
 void RatioSlider::setValue(float v) {

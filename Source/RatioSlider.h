@@ -16,7 +16,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    double getValue();
+    float getValue();
     void setValue(float);
     String getTextFromValue(double value) override;
 

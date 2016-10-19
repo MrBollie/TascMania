@@ -32,6 +32,7 @@ public:
             */
             virtual void eqRequested(ChannelStrip*) {}
             virtual void compRequested(ChannelStrip*) = 0;
+            virtual void soloRequested(ChannelStrip*) = 0;
     };
 
     void addListener(Listener*);
@@ -65,6 +66,7 @@ private:
     Label stripLabel;
 
     void sendEQRequest();
+    void sendSoloRequest();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChannelStrip)
 };

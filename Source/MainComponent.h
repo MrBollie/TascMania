@@ -26,6 +26,7 @@ public:
     void buttonClicked (Button*) override;
     void eqRequested(ChannelStrip*) override;
     void compRequested(ChannelStrip*) override;
+    void soloRequested(ChannelStrip*) override;
 
 private:
     ApplicationProperties *pAppProperties;

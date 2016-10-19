@@ -114,6 +114,7 @@ ChannelEQ::ChannelEQ(CChannelStrip *pC)
     lcfButton.setColour(TextButton::ColourIds::buttonOnColourId, Colour(0xffd2e00a));
     lcfButton.setClickingTogglesState(true);
 
+
     /******************
     * Compressor
     */
@@ -206,37 +207,24 @@ void ChannelEQ::resized()
 void ChannelEQ::sliderValueChanged(Slider* slider) {
     try {
         if (slider == pLowFreqSlider) {
-            std::cerr << "Freq: " << std::to_string(((FreqSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Freq after cast:" << std::to_string((int)((FreqSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQLowFreq((unsigned int)((FreqSlider*)slider)->getValue());
         }
         else if (slider == pLowMidFreqSlider) {
-            std::cerr << "Freq: " << std::to_string(((FreqSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Freq after cast:" << std::to_string((int)((FreqSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQLowMidFreq((unsigned int)((FreqSlider*)slider)->getValue());
         }
         else if (slider == pHiMidFreqSlider) {
-            std::cerr << "Freq: " << std::to_string(((FreqSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Freq after cast:" << std::to_string((int)((FreqSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQHiMidFreq((unsigned int)((FreqSlider*)slider)->getValue());
         }
         else if (slider == pHiFreqSlider) {
-            std::cerr << "Freq: " << std::to_string(((FreqSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Freq after cast:" << std::to_string((int)((FreqSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQHiFreq((unsigned int)((FreqSlider*)slider)->getValue());
         }
         else if (slider == pLowMidQSlider) {
-            std::cerr << "Q: " << std::to_string(((QSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Q after cast:" << std::to_string((float)((QSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQLowMidQ((float)((QSlider*)slider)->getValue());
         }
         else if (slider == pHiMidQSlider) {
-            std::cerr << "Q: " << std::to_string(((QSlider*)slider)->getValue()) << std::endl;
-            std::cerr << "Q after cast:" << std::to_string((float)((QSlider*)slider)->getValue()) << std::endl;
             pChannel->setEQHiMidQ((float)((QSlider*)slider)->getValue());
         }
         else if (slider == &lowGainSlider) {
-            std::cout << "Low Gain Slider" << std::endl;
             pChannel->setEQLowGain(slider->getValue());
         }
         else if (slider == &lowMidGainSlider) {
@@ -247,6 +235,24 @@ void ChannelEQ::sliderValueChanged(Slider* slider) {
         }
         else if (slider == &hiGainSlider) {
             pChannel->setEQHiGain(slider->getValue());
+        }
+        else if (slider == &compThresholdSlider) {
+            pChannel->setCompThreshold(slider->getValue());
+        }
+        else if (slider == pCompRatioSlider) {
+            pChannel->setCompRatio(((RatioSlider*)slider)->getValue());
+        }
+        else if (slider == &compAttackSlider) {
+            pChannel->setCompAttack(slider->getValue());
+        }
+        else if (slider == &compAttackSlider) {
+            pChannel->setCompAttack(slider->getValue());
+        }
+        else if (slider == &compReleaseSlider) {
+            pChannel->setCompRelease(slider->getValue());
+        }
+        else if (slider == &compGainSlider) {
+            pChannel->setCompGain(slider->getValue());
         }
     }
     catch (const char *c) {

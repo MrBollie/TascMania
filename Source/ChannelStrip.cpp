@@ -226,6 +226,19 @@ void ChannelStrip::buttonClicked (Button* button) {
             sendEQRequest();
         }
     }
+    else if (button == &soloToggle) {
+        // In case the user tries to disengage the button
+        // manually, we re-set it to being pushed.
+        // Otherwise we'd risk some weird state
+        if (!soloToggle.getToggleState()) {
+            soloToggle.setToggleState(true, dontSendNotification);
+        }
+        else {
+            // Request the EQ pannel to show this channel's
+            // parameters
+            sendSoloRequest();
+        }
+    }
 }
 
 
@@ -236,12 +249,14 @@ void ChannelStrip::engageSelButton() {
     selToggle.setToggleState(true, dontSendNotification);
 }
 
+
 /**
 * Sets the EQ button's state to toggle off
 */
 void ChannelStrip::disengageSelButton() {
     selToggle.setToggleState(false, dontSendNotification);
 }
+
 
 /**
 * Sends out an eqRequested to all compatible listeners in order
@@ -253,6 +268,19 @@ void ChannelStrip::sendEQRequest() {
 
     if (! checker.shouldBailOut())
         channelStripListeners.callChecked (checker, &Listener::eqRequested, this);
+}
+
+
+/**
+* Sends out an soloRequested to all compatible listeners in order
+* to tell MainComponent, that this object wants to show its 
+* EQ and compressor parameters on the ChannelEQ panel.
+*/
+void ChannelStrip::sendSoloRequest() {
+    Component::BailOutChecker checker (this);
+
+    if (! checker.shouldBailOut())
+        channelStripListeners.callChecked (checker, &Listener::soloRequested, this);
 }
 
 
