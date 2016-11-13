@@ -1,2 +1,6 @@
 Builds/LinuxMakefile/build/
 doc/*
+*.cproject
+*.project
+*.settings
+*.swp
